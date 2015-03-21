@@ -3,16 +3,31 @@ using System.Collections.Generic;
 
 namespace ApreTa
 {
-	class MainClass
+	public static class MainClass
 	{
-		public static void Main(string[] args)
+		static MainClass ()
 		{
+			Console.SetWindowSize (ColSize * NumCol, 24);
+		}
+
+		public const int NumCol = 2;
+		public const int ColSize = 40;
+
+		public static void Main (string[] args)
+		{
+
+			// Inicializar la pantalla
+			Console.SetWindowSize (ColSize * NumCol, 24);
+			Console.CursorVisible = false;
+			//Console.BufferWidth = ColSize * NumCol;
+			//Console.SetBufferSize (ColSize * NumCol, 10);
 			//JRápido Jue = new JRápido();
-			Evol Ev = new Evol();
+			Evol Ev = new Evol ();
 
-			Ev.Run();
 
-			Console.WriteLine("Hello World!");
+			Ev.Run ();
+
+			Console.WriteLine ("Hello World!");
 		}
 	}
 
@@ -32,40 +47,34 @@ namespace ApreTa
 		{
 			public JJuegoRápido Jug;
 
-			public float Score
-			{
-				get
-				{
+			public float Score {
+				get {
 					return Jug.Score;
 				}
-				set
-				{
+				set {
 					Jug.Score = value;
 				}
 			}
 
 			public int Juegos = 0;
 
-			public float LS
-			{
-				get
-				{
+			public float LS {
+				get {
 					return Jug.LastScore;
 				}
-				set
-				{
+				set {
 					Jug.LastScore = value;
 				}
 			}
 		}
 
-		public JRápido(JJuegoRápido J1, JJuegoRápido J2)
+		public JRápido (JJuegoRápido J1, JJuegoRápido J2)
 		{
 			Jug = new EstadoJug[2];
-			Jug[0] = new EstadoJug();
-			Jug[1] = new EstadoJug();
-			Jug[0].Jug = J1;
-			Jug[1].Jug = J2;
+			Jug [0] = new EstadoJug ();
+			Jug [1] = new EstadoJug ();
+			Jug [0].Jug = J1;
+			Jug [1].Jug = J2;
 
 			H.Data = new int[2, Iteraciones];		
 		}
@@ -74,93 +83,80 @@ namespace ApreTa
 		public int Iteraciones = 10;
 		public JJuegoRápido Ganador;
 		public JJuegoRápido Perdedor;
-		Historial H = new Historial();
+		Historial H = new Historial ();
 		// int RondaContador = 0;
-		public void Run(bool Show = false)
+		public void Run (bool Show = false)
 		{
-			for (int RondaContador = 0; RondaContador < Iteraciones; RondaContador++)
-			{
-				Ronda(RondaContador);
+			for (int RondaContador = 0; RondaContador < Iteraciones; RondaContador++) {
+				Ronda (RondaContador);
 			}
 
-			Jug[0].Score += Jug[0].LS;
-			Jug[1].Score += Jug[1].LS;
+			Jug [0].Score += Jug [0].LS;
+			Jug [1].Score += Jug [1].LS;
 
 			int iGan;
-			if (Jug[0].Score > Jug[1].Score)
+			if (Jug [0].Score > Jug [1].Score)
 				iGan = 0;
 			else
 				iGan = 1;
 
-			Ganador = Jug[iGan].Jug;
-			Perdedor = Jug[1 - iGan].Jug;
+			Ganador = Jug [iGan].Jug;
+			Perdedor = Jug [1 - iGan].Jug;
 
-			if (Show)
-			{
-				Console.WriteLine("0: " + Jugador(0).fml);
-				Console.WriteLine("1: " + Jugador(1).fml);
-				for (int j = 0; j < 2; j++)
-				{
-					Console.Write(string.Format("{0}:\t", j));
-					for (int i = 0; i < H.Data.GetLength(1); i++)
-					{
-						Console.Write(H.Data[j, i] + " | ");
+			if (Show) {
+				Console.WriteLine ("0: " + Jugador (0).fml);
+				Console.WriteLine ("1: " + Jugador (1).fml);
+				for (int j = 0; j < 2; j++) {
+					Console.Write (string.Format ("{0}:\t", j));
+					for (int i = 0; i < H.Data.GetLength(1); i++) {
+						Console.Write (H.Data [j, i] + " | ");
 					}
 
-					Console.WriteLine(" ---> " + Jug[j].LS + "(" + Jug[j].Score + ")");
+					Console.WriteLine (" ---> " + Jug [j].LS + "(" + Jug [j].Score + ")");
 				}
 				// Console.ReadLine();
 			}
 
-			Jug[0].LS = 0;
-			Jug[1].LS = 0;
+			Jug [0].LS = 0;
+			Jug [1].LS = 0;
 
 
 		}
 
-		public JJuegoRápido Jugador(int i)
+		public JJuegoRápido Jugador (int i)
 		{
-			return Jug[i].Jug;
+			return Jug [i].Jug;
 		}
 
-		void Ronda(int RondaContador)
+		void Ronda (int RondaContador)
 		{
 			int a;
 			int b;
 
-			a = Jugador(0).JugarEstrategia(H, RondaContador);
-			b = Jugador(1).JugarEstrategia(H.Invertir(), RondaContador);
+			a = Jugador (0).JugarEstrategia (H, RondaContador);
+			b = Jugador (1).JugarEstrategia (H.Invertir (), RondaContador);
 
 			a = a == 0 ? 0 : 1;
 			b = b == 0 ? 0 : 1;
 
-			H.Data[0, RondaContador] = a;
-			H.Data[1, RondaContador] = b;
+			H.Data [0, RondaContador] = a;
+			H.Data [1, RondaContador] = b;
 
-			if (a == 0)
-			{
-				if (b == 0)
-				{
-					Jug[0].LS += -1;
-					Jug[1].LS += -1;
+			if (a == 0) {
+				if (b == 0) {
+					Jug [0].LS += -1;
+					Jug [1].LS += -1;
+				} else {
+					Jug [0].LS += 5;
+					Jug [1].LS += 0;
 				}
-				else
-				{
-					Jug[0].LS += 5;
-					Jug[1].LS += 0;
-				}
-			}
-			else //a == 1
-			{
-				if (b == 0)
-				{
-					Jug[0].LS += 0;
-					Jug[1].LS += 5;
-				}
-				else
-				{
-					Jug[0].LS += 3;
-					Jug[1].LS += 3;
+			} else { //a == 1
+				if (b == 0) {
+					Jug [0].LS += 0;
+					Jug [1].LS += 5;
+				} else {
+					Jug [0].LS += 3;
+					Jug [1].LS += 3;
 				}
 			}
 		}
@@ -170,14 +166,13 @@ namespace ApreTa
 	{
 		public int[,] Data;
 
-		public Historial Invertir()
+		public Historial Invertir ()
 		{
-			Historial ret = new Historial();
-			ret.Data = new int[2, Data.GetLength(1)];
-			for (int i = 0; i < Data.GetLength(1); i++)
-			{
-				ret.Data[0, i] = Data[1, i];
-				ret.Data[1, i] = Data[0, i];
+			Historial ret = new Historial ();
+			ret.Data = new int[2, Data.GetLength (1)];
+			for (int i = 0; i < Data.GetLength(1); i++) {
+				ret.Data [0, i] = Data [1, i];
+				ret.Data [1, i] = Data [0, i];
 			}
 			return ret;
 		}
@@ -187,114 +182,118 @@ namespace ApreTa
 	{
 		public float _score = 0;
 
-		public float Score
-		{
-			get
-			{
+		public float Score {
+			get {
 				return _score;
 			}
-			set
-			{
+			set {
 				_score = value;
 			}
 		}
 
+		public System.ConsoleColor clr = ConsoleColor.White;
 		public float LastScore = 0;
 
-		public int JugarEstrategia(Historial H, int i)
+		public int JugarEstrategia (Historial H, int i)
 		{
 			// Evaluar fml
 			int[] MemStack = new int[256];
 			int stackptr = 0;
 
-			string[] splilFml = fml.Split(splitChar);
+			string[] splilFml;
+			splilFml = fmll.ToArray ();
 
-
-
-			foreach (var m in splilFml)
-			{
-				switch (m)
-				{
-					case "!":
-						MemStack[stackptr] = 1 - MemStack[stackptr];
-						break;
-					case "+":
-						if (stackptr >= 1)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] + MemStack[stackptr];
-							stackptr--;
-						}
-						break;
-					case "*":
-						if (stackptr >= 1)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] * MemStack[stackptr];
-							stackptr--;
-						}
-						break;
-					case "-":
-						if (stackptr >= 1)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] - MemStack[stackptr];
-							stackptr--;
-						}
-						break;
-					case "%":
-						if (stackptr >= 1 && MemStack[stackptr] > 0)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] % MemStack[stackptr];
-							stackptr--;
-						}
-						break;
-					case "<":
-						if (stackptr > 1)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] < MemStack[stackptr] ? 1 : 0;
-							stackptr--;
-						}
-						break;
-					case "?":
-						if (stackptr >= 2)
-						{
-							MemStack[stackptr - 2] = MemStack[stackptr] != 0 ? MemStack[stackptr - 1] : MemStack[stackptr - 2];
-							stackptr -= 2;
-						}
-						break;
-					case "=":
-						if (stackptr > 0)
-						{
-							MemStack[stackptr - 1] = MemStack[stackptr - 1] == MemStack[stackptr] ? 1 : 0;
-							stackptr--;
-						}
-						break;
-					case "h":
-						if (MemStack[stackptr] < H.Data.GetLength(1) && MemStack[stackptr] >= 0)
-							MemStack[stackptr] = H.Data[1, MemStack[stackptr]];
-						break;
-					case "i":
+			foreach (var m in splilFml) {
+				switch (m) {
+				case "!":
+					MemStack [stackptr] = 1 - MemStack [stackptr];
+					break;
+				case "+":
+					if (stackptr >= 1) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] + MemStack [stackptr];
+						stackptr--;
+					}
+					break;
+				case "*":
+					if (stackptr >= 1) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] * MemStack [stackptr];
+						stackptr--;
+					}
+					break;
+				case "-":
+					if (stackptr >= 1) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] - MemStack [stackptr];
+						stackptr--;
+					}
+					break;
+				case "%":
+					if (stackptr >= 1 && MemStack [stackptr] > 0) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] % MemStack [stackptr];
+						stackptr--;
+					}
+					break;
+				case "<":
+					if (stackptr > 1) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] < MemStack [stackptr] ? 1 : 0;
+						stackptr--;
+					}
+					break;
+				case "?":
+					if (stackptr >= 2) {
+						MemStack [stackptr - 2] = MemStack [stackptr] != 0 ? MemStack [stackptr - 1] : MemStack [stackptr - 2];
+						stackptr -= 2;
+					}
+					break;
+				case "=":
+					if (stackptr > 0) {
+						MemStack [stackptr - 1] = MemStack [stackptr - 1] == MemStack [stackptr] ? 1 : 0;
+						stackptr--;
+					}
+					break;
+				case "h":
+					if (MemStack [stackptr] < H.Data.GetLength (1) && MemStack [stackptr] >= 0)
+						MemStack [stackptr] = H.Data [1, MemStack [stackptr]];
+					break;
+				case "i":
+					stackptr++;
+					MemStack [stackptr] = i;
+					break;
+				default:
+					int n;
+					if (int.TryParse (m, out n)) {
 						stackptr++;
-						MemStack[stackptr] = i;
-						break;
-					default:
-						int n;
-						if (int.TryParse(m, out n))
-						{
-							stackptr++;
-							MemStack[stackptr] = n;
-						}
-						break;
+						MemStack [stackptr] = n;
+					}
+					break;
 				}
 			}
-			return MemStack[stackptr];
+			return MemStack [stackptr];
 		}
 
-		public JJuegoRápido(string f)
+		public JJuegoRápido (string f)
 		{
-			fml = f;
+			string[] a = f.Split (splitChar);
+			fmll = new List<string> (a);
 			//pct = Strat;
 		}
 
-		public string fml;
+		public JJuegoRápido (string[] f)
+		{
+			fmll = new List<string> (f);
+		}
+		//public string fml;
+		public List<string> fmll = new List<string> ();
+
+		public string fml {
+			get {
+				string ret = "";
+				foreach (var x in fmll) {
+					ret += x + " ";
+				}
+				return ret.TrimEnd (' ');
+			}
+		}
+
 		char[] splitChar = {' '};
 		// public float pct;
 		// Random r = new Random();
@@ -304,65 +303,61 @@ namespace ApreTa
 	{
 		public class EstadoJugador
 		{
-			public override string ToString()
+			public override string ToString ()
 			{
-				return string.Format("({0}) : {1}", Jug.fml, Jug.Score);
+				return string.Format ("({0}) : {1}", Jug.fml, Jug.Score);
 			}
 
 			public int Juegos = 0;
-
 			public JJuegoRápido Jug;
 			// public int Lives = 3;
 			//public int ReprScore = 0;
 		}
 
-		public EstadoJugador EncuentraEstado(JJuegoRápido J)
+		public EstadoJugador EncuentraEstado (JJuegoRápido J)
 		{
-			return Pool.Find(x => x.Jug == J);
+			return Pool.Find (x => x.Jug == J);
 		}
 
 		const int PoolSizeInicial = 300;
 		const int PoolSizeMerge = 220;
 		const int PoolSizeCompete = 300;
 
-		public int PoolSize
-		{
-			get
-			{
+		public int PoolSize {
+			get {
 				return Pool.Count;
 			}
 		}
 
-		List<EstadoJugador> Pool = new List<EstadoJugador>();
+		List<EstadoJugador> Pool = new List<EstadoJugador> ();
 
-		public void AgregaJugador(JJuegoRápido J)
+		public void AgregaJugador (JJuegoRápido J)
 		{
-			EstadoJugador t = new EstadoJugador();
+			EstadoJugador t = new EstadoJugador ();
 			t.Jug = J;
-			Pool.Add(t);
+			Pool.Add (t);
 		}
 
-		Random r = new Random();
+		Random r = new Random ();
 
-		public Evol()
+		public Evol ()
 		{
-			for (int i = 0; i < PoolSizeInicial; i++)
-			{
-				AgregaJugador(new JJuegoRápido("")); //i = 0 ? 1 : h (i - 1)
+			for (int i = 0; i < PoolSizeInicial; i++) {
+				AgregaJugador (new JJuegoRápido ("")); //i = 0 ? 1 : h (i - 1)
 			}
 		}
 
 		const int Rondas = 10000;
-		public void RunOnce()
+
+		public void RunOnce ()
 		{
-			for (int i = 0; i < Rondas; i++)
-			{
-				int a = r.Next(PoolSize);
-				int b = r.Next(PoolSize);
-				Pool[a].Juegos ++;
-				Pool[b].Juegos ++;
-				JRápido J = new JRápido(Pool[a].Jug, Pool[b].Jug);
-				J.Run(false);
+			for (int i = 0; i < Rondas; i++) {
+				int a = r.Next (PoolSize);
+				int b = r.Next (PoolSize);
+				Pool [a].Juegos ++;
+				Pool [b].Juegos ++;
+				JRápido J = new JRápido (Pool [a].Jug, Pool [b].Jug);
+				J.Run (false);
 			}
 /*
 			for (int a = 0; a < PoolSize; a++)
@@ -382,68 +377,78 @@ namespace ApreTa
 			//	Pool.RemoveAll(x => x.Jug == J.Perdedor);
 		}
 
-		public void EntreRuns()
+		public void EntreRuns ()
 		{
 		}
 
-		public void Run()
+		public void Run ()
 		{
-			while (true)
-			{
-				RunOnce();
+			while (true) {
+				RunOnce ();
 
 				// Duplicarme
 
 				// ADN largo tiene penalización
 
 
-				foreach (var x in Pool)
-				{
-					if (x.Juegos > 0)
-					{
+				foreach (var x in Pool) {
+					if (x.Juegos > 0) {
 						x.Jug.Score = x.Jug.Score / x.Juegos;
 						x.Juegos = 0;
-					}
-					else
-					{
+					} else {
 						x.Jug.Score = 0;
 					}
 					x.Jug.Score -= (x.Jug.fml.Length / 10);
 				}
 
-				Pool.Sort((x,y) => x.Jug.Score < y.Jug.Score ? 1 : -1); // Ordenados por score.
+				Pool.Sort ((x,y) => x.Jug.Score < y.Jug.Score ? 1 : -1); // Ordenados por score.
 
 
 
-				Pool.RemoveRange(PoolSizeMerge, PoolSize - PoolSizeMerge);
+				Pool.RemoveRange (PoolSizeMerge, PoolSize - PoolSizeMerge);
 
 				int Adders = PoolSizeCompete - PoolSize;
 
-				for (int i = 0; i < Adders; i++)
-				{
-					JJuegoRápido Padre = Pool[i].Jug;
-					JJuegoRápido dupe = new JJuegoRápido(Padre.fml);
+				for (int i = 0; i < Adders; i++) {
+					JJuegoRápido Padre = Pool [i].Jug;
+					JJuegoRápido dupe = new JJuegoRápido (Padre.fmll.ToArray());
 
-					while (r.NextDouble() < 0.3)
+					if (r.NextDouble() < 0.05)
 					{
-						bool Borrar = (r.NextDouble() < 0.75);
-						switch (Borrar)
-						{
-							case true:
-								int m = r.Next(dupe.fml.Length);
-								if (dupe.fml.Length > 0 && dupe.fml[m] != ' ')
-									dupe.fml = dupe.fml.Remove(m, 1);
-								break;
+						dupe.clr = (ConsoleColor)r.Next (16);
+					} else {
+						dupe.clr = Padre.clr;
+					}
 
-							case false:
-								string[] Sym = {" + ", " h ", " i ", " - ", " % ", " = ", " ? ", " < ", " * ", " ! "};
-							int k =r.Next(Sym.Length + 1);
-							if (k == Sym.Length)
+					while (r.NextDouble() < 0.1) {
+						bool Borrar = (r.NextDouble () < 0.75);
+						switch (Borrar) {
+						case true:
+							if (dupe.fmll.Count > 0)
 							{
-								dupe.fml = dupe.fml.Insert(r.Next(dupe.fml.Length + 1), " " + (r.Next(21) - 10).ToString() + " ");
+								int m = r.Next (dupe.fmll.Count);
+								dupe.fmll.RemoveAt (m);
 							}
-							else {
-								dupe.fml = dupe.fml.Insert(r.Next(dupe.fml.Length + 1), Sym[k]);
+							break;
+
+						case false:
+							string[] Sym = {
+								"+",
+								"h",
+								"i",
+								"-",
+								"%",
+								"=",
+								"?",
+								"<",
+								"*",
+								"!"
+							};
+							int k = r.Next (Sym.Length + 1);
+							if (k == Sym.Length) {
+								dupe.fmll.Insert (r.Next (dupe.fmll.Count + 1), " " + (r.Next (21) - 10).ToString () + " ");
+							} else {
+								dupe.fmll.Insert (r.Next (dupe.fmll.Count + 1), Sym [k]);
 							}
 							break;
 
@@ -451,26 +456,34 @@ namespace ApreTa
 							break;
 						}
 					}				
-					dupe.fml = dupe.fml.Replace("  ", " ");
-					dupe.fml = dupe.fml.Trim();
-					AgregaJugador(dupe);
+					//dupe.fml = dupe.fml.Replace ("  ", " ");
+					//dupe.fml = dupe.fml.Trim ();
+					AgregaJugador (dupe);
 				}
 
 				//Console.WriteLine (Pool[0]);
 				//Random r = new Random();
 
 
-				Pool.Sort((x,y) => string.Compare(x.Jug.fml, y.Jug.fml));
+				Pool.Sort ((x,y) => string.Compare (x.Jug.fml, y.Jug.fml));
 
+				// Borrar pantalla
+				Console.Clear ();
+				int w = 0;
 				// Escribir el pool
 				foreach (var x in Pool) {
-					Console.Write (string.Format ("{0}\t\t\t", x.Jug.fml));
+					w++;
+					int z = w % MainClass.NumCol;
+					Console.ForegroundColor = x.Jug.clr;
+					//Console.ForegroundColor = (System.ConsoleColor)(((int)Console.ForegroundColor + 1) % 16);
+					//Console.CursorLeft = 1 + z * MainClass.ColSize;
+					Console.Write (string.Format ("{0} ", x.Jug.fml));
 					x.Jug.Score = 0;
+					if (z == MainClass.NumCol - 1) {
+					}
+					//Console.WriteLine ();
 				}
-				Console.WriteLine ("-------------------------------------------------------------------------");
-				Console.WriteLine ("Ganador: " + Pool[0].Jug.fml);
-				if (r.NextDouble() < 0.01)
-				{	
+				if (r.NextDouble () < 0.01) {	
 					//Console.ReadLine();
 				}
 			}
