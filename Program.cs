@@ -301,7 +301,7 @@ namespace ApreTa
 
 	public class Evol
 	{
-		public class EstadoJugador
+		public class EstadoJugador: IComparable<EstadoJugador>
 		{
 			public override string ToString ()
 			{
@@ -312,6 +312,12 @@ namespace ApreTa
 			public JJuegoRápido Jug;
 			// public int Lives = 3;
 			//public int ReprScore = 0;
+			int IComparable<EstadoJugador>.CompareTo (EstadoJugador comp)
+			{
+				if (comp == null)
+					return -1;
+				return Jug.Score < comp.Jug.Score ? 1 : -1;
+			}
 		}
 
 		public EstadoJugador EncuentraEstado (JJuegoRápido J)
@@ -401,9 +407,17 @@ namespace ApreTa
 					x.Jug.Score -= (x.Jug.fml.Length / 10);
 				}
 
-				Pool.Sort ((x,y) => x.Jug.Score < y.Jug.Score ? 1 : -1); // Ordenados por score.
-
-
+				try
+				{
+					if (Pool.Exists(x => x.Jug == null))
+						Console.WriteLine("Pfft");
+					Pool.Sort();
+					//Pool.Sort((x, y) => x.Jug.Score < y.Jug.Score ? 1 : -1); // Ordenados por score.
+				}
+				catch (NullReferenceException C)
+				{					
+					throw;
+				}
 
 				Pool.RemoveRange (PoolSizeMerge, PoolSize - PoolSizeMerge);
 
@@ -465,26 +479,19 @@ namespace ApreTa
 				//Random r = new Random();
 
 
-				Pool.Sort ((x,y) => string.Compare (x.Jug.fml, y.Jug.fml));
+				Pool.Sort();
 
 				// Borrar pantalla
 				Console.Clear ();
-				int w = 0;
+				// Escribir máxima puntuación y mínima.
+				Console.ForegroundColor = Pool[0].Jug.clr;
+				Console.WriteLine("Máxima: {0}, por ({1})", Pool[0].Jug.Score, Pool[0].Jug.fml);
 				// Escribir el pool
 				foreach (var x in Pool) {
-					w++;
-					int z = w % MainClass.NumCol;
 					Console.ForegroundColor = x.Jug.clr;
-					//Console.ForegroundColor = (System.ConsoleColor)(((int)Console.ForegroundColor + 1) % 16);
-					//Console.CursorLeft = 1 + z * MainClass.ColSize;
-					Console.Write (string.Format ("{0} ", x.Jug.fml));
+					if (x.Jug.fmll.Count > 0)
+						Console.Write(string.Format("{0} ", x.Jug.fml));
 					x.Jug.Score = 0;
-					if (z == MainClass.NumCol - 1) {
-					}
-					//Console.WriteLine ();
-				}
-				if (r.NextDouble () < 0.01) {	
-					//Console.ReadLine();
 				}
 			}
 		}
