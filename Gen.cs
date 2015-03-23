@@ -18,7 +18,7 @@ namespace ApreTa
 	/// </summary>
 	public class GrupoGen:Gen
 	{
-		List<Gen> Genes;
+		List<Gen> Genes = new List<Gen> ();
 
 		/// <summary>
 		/// Replica este grupo genético.

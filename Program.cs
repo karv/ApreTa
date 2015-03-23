@@ -22,12 +22,14 @@ namespace ApreTa
 			//Console.BufferWidth = ColSize * NumCol;
 			//Console.SetBufferSize (ColSize * NumCol, 10);
 			//JRápido Jue = new JRápido();
-			Evol Ev = new Evol ();
+			//Evol Ev = new Evol ();
 
 
-			Ev.Run ();
+			//Ev.Run ();
 
-			Console.WriteLine ("Hello World!");
+			Torneo T = new Torneo ();
+			T.Run ();
+
 		}
 	}
 
@@ -179,6 +181,13 @@ namespace ApreTa
 				ret.Data [1, i] = Data [0, i];
 			}
 			return ret;
+		}
+
+		public void AgregaTurno (int a, int b)
+		{
+			Data [0, Actual] = a;
+			Data [1, Actual] = b;
+			Actual++;
 		}
 	}
 
@@ -420,7 +429,7 @@ namespace ApreTa
 				}
 				catch (NullReferenceException C)
 				{					
-					throw;
+					throw C;
 				}
 
 				Pool.RemoveRange (PoolSizeMerge, PoolSize - PoolSizeMerge);
