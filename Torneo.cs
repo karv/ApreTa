@@ -29,6 +29,11 @@ namespace ApreTa
 			{
 				Indiv = new Individuo ();
 			}
+
+			public override string ToString ()
+			{
+				return string.Format ("{0}\t {1}", Punt, Indiv);
+			}
 		}
 
 		List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
@@ -66,7 +71,7 @@ namespace ApreTa
 				I [1].Juegos++;
 
 				// Hacerlos interactuar.
-
+				Encuentro (I [0], I [1]);
 			}
 		}
 
@@ -112,7 +117,7 @@ namespace ApreTa
 			Console.Clear ();
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
-			Console.WriteLine ("Máxima: {0}", Individuos [0].Punt);   //Pool[0].Jug.Score, Pool[0].Jug.fml);
+			Console.WriteLine ("Máxima: {0}", Individuos [0].Punt);
 			// Escribir el pool
 			foreach (var x in Individuos) {
 				//Console.ForegroundColor = x.Jug.clr;
