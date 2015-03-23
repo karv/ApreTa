@@ -84,25 +84,29 @@ namespace ApreTa
 		
 		}
 
+		/// <summary>
+		/// Replica a los individuos hasta llegar a MaxIndiv
+		/// </summary>
 		public void ReplicarAdaptados ()
 		{
-			List<Individuo> AgregandoLista = new List<Individuo> ();
-			foreach (var x in Individuos) {
-				Individuo Agregando = x.Indiv.Replicar ();
-				AgregandoLista.Add (Agregando);
-			}
-
-			foreach (var x in AgregandoLista) {
-				Individuos.Add (new EstructuraIndividuo (x));
+			while (Individuos.Count < MaxIndiv) {
+				EstructuraIndividuo I = Individuos [r.Next (Individuos.Count)];
+				Individuos.Add (new EstructuraIndividuo (I.Indiv.Replicar ()));
 			}
 		}
 
+		/// <summary>
+		/// Mata a los de puntuación menor, hasta llegar a MinIndiv.
+		/// </summary>
 		public void MatarMenosAdaptados ()
 		{
 			Individuos.Sort ((EstructuraIndividuo x, EstructuraIndividuo y) => x.Punt < y.Punt ? -1 : 1);
 			Individuos.RemoveRange (MinIndiv, MaxIndiv - MinIndiv);
 		}
 
+		/// <summary>
+		/// Muestra en consola lo que se debe mostrar entre turnos.
+		/// </summary>
 		public void MuestraStats ()
 		{
 			Console.Clear ();
@@ -113,7 +117,7 @@ namespace ApreTa
 			foreach (var x in Individuos) {
 				//Console.ForegroundColor = x.Jug.clr;
 
-				Console.Write (string.Format ("{0} ", x.ToString ()));
+				Console.Write (string.Format ("{0} ", x.Indiv.ToString ()));
 			}
 
 		}
@@ -161,7 +165,6 @@ namespace ApreTa
 				// Modificar puntuación.
 				if (a == 0) {
 					if (b == 0) {
-
 						Ind [0].Punt += -1;
 						Ind [0].Punt += -1;
 					} else {

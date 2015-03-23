@@ -22,6 +22,11 @@ namespace ApreTa
 
 			return ret;
 		}
+
+		public override string ToString ()
+		{
+			return Genética.ToString ();
+		}
 	}
 
 	/// <summary>

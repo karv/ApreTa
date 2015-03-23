@@ -8,7 +8,10 @@ namespace ApreTa
 	/// </summary>
 	public abstract class Gen
 	{
-		public abstract Gen Replicar ();
+		protected Random r = new Random ();
+		protected ConsoleColor clr = ConsoleColor.White;
+
+		public abstract Gen Replicar (float Coef = 1);
 
 		public abstract void Ejecutar (MemStack Mem, Historial H = null);
 	}
@@ -23,12 +26,49 @@ namespace ApreTa
 		/// <summary>
 		/// Replica este grupo genético.
 		/// </summary>
-		public override Gen Replicar ()
+		public override Gen Replicar (float Coef = 1)
 		{
 			GrupoGen ret = new GrupoGen ();
 			foreach (var x in Genes) {
-				ret.Genes.Add (x.Replicar ());
+				if (r.NextDouble () >= 0.1 * Coef) // La probabilidad de eliminación base es 0.1
+					ret.Genes.Add (x.Replicar (Coef * 0.7f)); // Probabilidad recursiva/iterada es de 0.7
 			}
+
+			// AgregarInstrucción
+			while (r.NextDouble() < Coef * 0.1) {
+				int indAgrega = r.Next (ret.Genes.Count + 1); //Índice para agregar
+				ret.Genes.Insert (indAgrega, InstrucciónGen.Aleatorio (r));
+			}
+
+			// Dividir gen
+			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
+				int indCorte = r.Next (ret.Genes.Count + 1);
+				GrupoGen G0 = new GrupoGen ();
+				GrupoGen G1 = new GrupoGen ();
+				for (int i = 0; i < ret.Genes.Count; i++) {
+					if (i <= indCorte)
+						G0.Genes.Add (ret.Genes [i]);
+					else
+						G1.Genes.Add (ret.Genes [i]);
+				}
+				ret.Genes = new List<Gen> ();
+				ret.Genes.Add (G0);
+				ret.Genes.Add (G1);
+			}
+			// Color (no entra
+			if (r.NextDouble () < 0.05)
+				clr = (ConsoleColor)r.Next (16);
+			return ret;
+		}
+
+		public override string ToString ()
+		{
+			string ret = "(";
+			foreach (var x in Genes) {
+				ret += x.ToString ();
+			}
+			ret += ")";
+
 			return ret;
 		}
 
@@ -37,6 +77,7 @@ namespace ApreTa
 			foreach (var x in Genes) {
 				x.Ejecutar (Mem);
 			}
+
 		}
 	}
 
@@ -45,14 +86,46 @@ namespace ApreTa
 	/// </summary>
 	public class InstrucciónGen:Gen
 	{
+		static readonly string[] _Símbolos = {
+			"!",
+			"+",
+			"*",
+			"-",
+			"?",
+			"%",
+			"<",
+			"=",
+			"h",
+			"i",
+			null // Se usa para dar la instrucción de generar entero.
+		};
 		public string Instrucción;
 
-		public override Gen Replicar ()
+		/// <summary>
+		/// Genera un gen de instrucción aleatorio.
+		/// </summary>
+		/// <param name="R">R.</param>
+		public static InstrucciónGen Aleatorio (Random R)
+		{
+			InstrucciónGen ret = new InstrucciónGen ();
+			ret.Instrucción = _Símbolos [R.Next (_Símbolos.Length)];
+			if (ret.Instrucción == null)
+				ret.Instrucción = R.Next (10).ToString ();
+
+			return ret;
+		}
+
+		public override Gen Replicar (float Coef = 1)
 		{
 			InstrucciónGen ret = new InstrucciónGen ();
 			ret.Instrucción = Instrucción;
 
 			return ret;
+		}
+
+		public override string ToString ()
+		{
+			return Instrucción;
 		}
 
 		public override void Ejecutar (MemStack Mem, Historial H = null)
