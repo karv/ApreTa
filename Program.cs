@@ -165,6 +165,10 @@ namespace ApreTa
 	public class Historial
 	{
 		public int[,] Data;
+		/// <summary>
+		/// Devuelve el "turno" actual.
+		/// </summary>
+		public int Actual = 0;
 
 		public Historial Invertir ()
 		{
