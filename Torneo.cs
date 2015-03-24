@@ -38,7 +38,7 @@ namespace ApreTa
 
 		List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
 		public const int MinIndiv = 100;
-		public const int MaxIndiv = 200;
+		public const int MaxIndiv = 120;
 		/// <summary>
 		/// Número de encuentros por turno.
 		/// </summary>
@@ -83,10 +83,25 @@ namespace ApreTa
 			while (true) {
 				RunOnce ();
 				MatarMenosAdaptados ();
-				ReplicarAdaptados ();
 				MuestraStats ();
+				ReplicarAdaptados ();
+				ResetScore ();
+			}		
+		}
+
+		public void DespuntuarLargos ()
+		{
+			foreach (var x in Individuos) {
+				x.Punt -= x.ToString ().Length / 10;
 			}
-		
+		}
+
+		public void ResetScore ()
+		{
+			foreach (var x in Individuos) {
+				x.Juegos = 0;
+				x.Punt = 0;
+			}
 		}
 
 		/// <summary>
@@ -105,7 +120,7 @@ namespace ApreTa
 		/// </summary>
 		public void MatarMenosAdaptados ()
 		{
-			Individuos.Sort ((EstructuraIndividuo x, EstructuraIndividuo y) => x.Punt < y.Punt ? -1 : 1);
+			Individuos.Sort ((EstructuraIndividuo x, EstructuraIndividuo y) => x.Punt < y.Punt ? 1 : -1);
 			Individuos.RemoveRange (MinIndiv, MaxIndiv - MinIndiv);
 		}
 
@@ -117,11 +132,18 @@ namespace ApreTa
 			Console.Clear ();
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
-			Console.WriteLine ("Máxima: {0}", Individuos [0].Punt);
+			Console.Write ("Máxima: {0} - {1}", Individuos [0].Punt, Individuos [0].Indiv);
+			if (Individuos [0].Indiv.Genética.Esbueno ())
+				Console.Write ("  BUENO");
+			Console.WriteLine ();
 			// Escribir el pool
 			foreach (var x in Individuos) {
 				//Console.ForegroundColor = x.Jug.clr;
-
+				if (x.Indiv.Genética.Esbueno ()) {
+					Console.ForegroundColor = ConsoleColor.Blue;
+				} else {
+					Console.ForegroundColor = ConsoleColor.White;
+				}
 				Console.Write (string.Format ("{0} ", x.Indiv.ToString ()));
 			}
 
@@ -151,14 +173,16 @@ namespace ApreTa
 
 				MemStack MSa = new MemStack ();
 				MemStack MSb = new MemStack ();
-				int a;
-				int b;
+				int a = 0;
+				int b = 0;
 
 				Ind [0].Indiv.Genética.Ejecutar (MSa, H);
 				Ind [1].Indiv.Genética.Ejecutar (MSb, H);
 
-				a = MSa.Pop ();
-				b = MSb.Pop ();
+				if (MSa.Count > 0)
+					a = MSa.Pop ();
+				if (MSb.Count > 0)
+					b = MSb.Pop ();
 
 				a = a == 0 ? 0 : 1;
 				b = b == 0 ? 0 : 1;

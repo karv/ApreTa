@@ -14,6 +14,17 @@ namespace ApreTa
 		public abstract Gen Replicar (float Coef = 1);
 
 		public abstract void Ejecutar (MemStack Mem, Historial H = null);
+
+		public bool Esbueno ()
+		{
+			MemStack M = new MemStack ();
+			Ejecutar (M, new Historial ());
+			if (M.Count > 0 && M.Peek () != 0)
+				return true;
+			else {
+				return false;
+			}
+		}
 	}
 
 	/// <summary>
@@ -75,7 +86,7 @@ namespace ApreTa
 		public override void Ejecutar (MemStack Mem, Historial H = null)
 		{
 			foreach (var x in Genes) {
-				x.Ejecutar (Mem);
+				x.Ejecutar (Mem, H);
 			}
 
 		}
@@ -130,42 +141,50 @@ namespace ApreTa
 
 		public override void Ejecutar (MemStack Mem, Historial H = null)
 		{
+			if (H == null)
+				throw new Exception ("");
 			int StackSize = Mem.Count;
 			switch (Instrucción) {
 			case "!":
-				Mem.Push (1 - Mem.Pop ());
+				if (StackSize >= 1)
+					Mem.Push (1 - Mem.Pop ());
 				break;
 			case "+":
-				if (StackSize >= 1)
+				if (StackSize >= 2)
 					Mem.Push (Mem.Pop () + Mem.Pop ());
 				break;
 			case "*":
-				if (StackSize >= 1)
+				if (StackSize >= 2)
 					Mem.Push (Mem.Pop () * Mem.Pop ());
 				break;
 			case "-":
-				if (StackSize >= 1)
+				if (StackSize >= 2)
 					Mem.Push (Mem.Pop () - Mem.Pop ());
 				break;
 			case "%":
-				if (StackSize >= 1)
-					Mem.Push (Mem.Pop () % Mem.Pop ());
+				if (StackSize >= 2)
+					try {
+						Mem.Push (Mem.Pop () % Mem.Pop ());
+					} catch (Exception ex) {
+						
+					}
+					
 				break;
 			case "?":
-				if (StackSize >= 2)
+				if (StackSize >= 3)
 					Mem.Push (Mem.Pop () != 0 ? Mem.Pop () : Mem.Pop ());
 				break;
 			case "<":
-				if (StackSize >= 1)
+				if (StackSize >= 2)
 					Mem.Push (Mem.Pop () < Mem.Pop () ? 1 : 0);
 				break;
 			case "=":
-				if (StackSize >= 1)
+				if (StackSize >= 2)
 					Mem.Push (Mem.Pop () == Mem.Pop () ? 1 : 0);
 				break;
 			case "h":
-				if (Mem.Peek () < H.Actual && Mem.Peek () >= 0 && StackSize >= 1)
-					Mem.Push (H.Data [1, Mem.Pop () - H.Actual]);
+				if (StackSize >= 1 && Mem.Peek () < H.Actual && Mem.Peek () >= 0)
+					Mem.Push (H.Data [1, H.Actual - Mem.Pop ()]);
 				break;
 			case "i":
 				Mem.Push (H.Actual);
