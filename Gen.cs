@@ -25,6 +25,21 @@ namespace ApreTa
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Devuelve true si este gen es equivalente a otro dado.
+		/// </summary>
+		/// <returns><c>true</c>, if equivalente was esed, <c>false</c> otherwise.</returns>
+		/// <param name="G">Gen a comparar</param>
+		public bool EsEquivalente (Gen G)
+		{
+			return ToString () == G.ToString ();
+		}
+
+		public static bool EsEquivalente (Gen G1, Gen G2)
+		{
+			return G1.EsEquivalente (G2);
+		}
 	}
 
 	/// <summary>
