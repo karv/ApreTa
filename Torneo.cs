@@ -48,7 +48,6 @@ namespace ApreTa
 					ret [y.Key] += y.Value;
 				}
 			}
-			ret.OrdenarPorValor ();
 			return ret;
 		}
 
@@ -167,8 +166,13 @@ namespace ApreTa
 			}
 			Console.WriteLine ();
 			Console.WriteLine ("La Gen pool:");
-			foreach (var x in CuentaGen().Data) {
-				Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
+			ContadorGen Pool = CuentaGen ();
+
+			int MaxGen = 5;
+			foreach (var x in Pool.Data) {
+				MaxGen--;
+				if (MaxGen >= 0)
+					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
 			}
 
 		}
