@@ -61,7 +61,7 @@ namespace ApreTa
 
 		List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
 		public const int MinIndiv = 100;
-		public const int MaxIndiv = 120;
+		public const int MaxIndiv = 1000;
 		/// <summary>
 		/// Número de encuentros por turno.
 		/// </summary>
@@ -153,6 +153,7 @@ namespace ApreTa
 		public void MuestraStats ()
 		{
 			Console.Clear ();
+			Console.ForegroundColor = ConsoleColor.White;
 			float BuenoPct = GetPctBuenos ();
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
@@ -180,10 +181,12 @@ namespace ApreTa
 			int MaxGen = 5;
 			foreach (var x in Pool.OrderByDescending(x=> x.Value)) {
 				MaxGen--;
-				if (MaxGen >= 0)					
-					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
+				if (MaxGen >= 0)
+				{
+					Console.ForegroundColor = x.Key.Esbueno() ? ConsoleColor.Blue : ConsoleColor.White;
+					Console.WriteLine(string.Format("{0}\t {1}", x.Key, x.Value));
+				}					
 			}
-
 		}
 
 		/// <summary>
