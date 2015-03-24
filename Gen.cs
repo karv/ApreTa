@@ -162,12 +162,12 @@ namespace ApreTa
 					Mem.Push (Mem.Pop () - Mem.Pop ());
 				break;
 			case "%":
-				if (StackSize >= 2)
-					try {
-						Mem.Push (Mem.Pop () % Mem.Pop ());
-					} catch (Exception ex) {
-						
-					}
+				if (StackSize >= 2) {
+					int o1 = Mem.Pop ();
+					int o2 = Mem.Pop ();
+					if (o2 != 0)
+						Mem.Push (o1 % o2);
+				}
 					
 				break;
 			case "?":
