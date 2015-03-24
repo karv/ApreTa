@@ -44,7 +44,7 @@ namespace ApreTa
 		{
 			ContadorGen ret = new ContadorGen ();
 			foreach (var x in Individuos) {
-				foreach (var y in x.Indiv.CuentaGen().Data) {
+				foreach (var y in x.Indiv.CuentaGen()) {
 					ret [y.Key] += y.Value;
 				}
 			}
@@ -167,9 +167,10 @@ namespace ApreTa
 			Console.WriteLine ();
 			Console.WriteLine ("La Gen pool:");
 			ContadorGen Pool = CuentaGen ();
+			
 
 			int MaxGen = 5;
-			foreach (var x in Pool.Data) {
+			foreach (var x in Pool) {
 				MaxGen--;
 				if (MaxGen >= 0)
 					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));

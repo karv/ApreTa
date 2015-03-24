@@ -141,7 +141,7 @@ namespace ApreTa
 			ret [this.ToString ()] += 1; 
 			foreach (var x in Genes) {
 				if (Hereditario) {
-					foreach (var y in x.CuentaGen(true).Data) {
+					foreach (var y in x.CuentaGen(true)) {
 						ret [y.Key] += y.Value; 
 					}
 				} else {
