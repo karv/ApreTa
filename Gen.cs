@@ -40,6 +40,20 @@ namespace ApreTa
 		{
 			return G1.EsEquivalente (G2);
 		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj is Gen) {
+				Gen Obj = (Gen)obj;
+				return EsEquivalente (Obj);
+			} else
+				return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return base.GetHashCode ();
+		}
 	}
 
 	/// <summary>
