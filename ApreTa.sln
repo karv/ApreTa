@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApreTa", "ApreTa.csproj", "{A0A543AE-C690-4253-8F10-C8E6A5C3DA75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListaExtras", "listaextras\ListaExtras.csproj", "{B9F315AE-47F8-4629-83FC-3B4D70087083}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{A0A543AE-C690-4253-8F10-C8E6A5C3DA75}.Debug|x86.Build.0 = Debug|x86
 		{A0A543AE-C690-4253-8F10-C8E6A5C3DA75}.Release|x86.ActiveCfg = Release|x86
 		{A0A543AE-C690-4253-8F10-C8E6A5C3DA75}.Release|x86.Build.0 = Release|x86
+		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Debug|x86.Build.0 = Debug|Any CPU
+		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|x86.ActiveCfg = Release|Any CPU
+		{B9F315AE-47F8-4629-83FC-3B4D70087083}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = ApreTa.csproj

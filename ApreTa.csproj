@@ -41,4 +41,10 @@
     <Compile Include="Torneo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="listaextras\ListaExtras.csproj">
+      <Project>{B9F315AE-47F8-4629-83FC-3B4D70087083}</Project>
+      <Name>ListaExtras</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
