@@ -212,4 +212,31 @@ namespace ApreTa
 			}
 		}
 	}
+
+	public class Historial
+	{
+		public int[,] Data;
+		/// <summary>
+		/// Devuelve el "turno" actual.
+		/// </summary>
+		public int Actual = 0;
+
+		public Historial Invertir ()
+		{
+			Historial ret = new Historial ();
+			ret.Data = new int[2, Data.GetLength (1)];
+			for (int i = 0; i < Data.GetLength(1); i++) {
+				ret.Data [0, i] = Data [1, i];
+				ret.Data [1, i] = Data [0, i];
+			}
+			return ret;
+		}
+
+		public void AgregaTurno (int a, int b)
+		{
+			Data [0, Actual] = a;
+			Data [1, Actual] = b;
+			Actual++;
+		}
+	}
 }
