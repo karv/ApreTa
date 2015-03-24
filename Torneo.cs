@@ -8,7 +8,7 @@ namespace ApreTa
 	/// </summary>
 	public class Torneo
 	{
-		public class EstructuraIndividuo
+		public class EstructuraIndividuo: IComparable<EstructuraIndividuo>
 		{
 			/// <summary>
 			/// Puntuación.
@@ -33,6 +33,13 @@ namespace ApreTa
 			public override string ToString ()
 			{
 				return string.Format ("{0}\t {1}", Punt, Indiv);
+			}
+
+			// Comparador
+			int IComparable<EstructuraIndividuo>.CompareTo(EstructuraIndividuo cmp)
+			{
+
+				return cmp != null && Punt < cmp.Punt ? 1 : -1;
 			}
 		}
 
@@ -135,7 +142,7 @@ namespace ApreTa
 		/// </summary>
 		public void MatarMenosAdaptados ()
 		{
-			Individuos.Sort ((EstructuraIndividuo x, EstructuraIndividuo y) => x.Punt < y.Punt ? 1 : -1);
+			Individuos.Sort();
 			Individuos.RemoveRange (MinIndiv, MaxIndiv - MinIndiv);
 		}
 
@@ -166,7 +173,9 @@ namespace ApreTa
 			}
 			Console.WriteLine ();
 			Console.WriteLine ("La Gen pool:");
-			ContadorGen Pool = CuentaGen ();
+			ContadorGen Pool = CuentaGen();
+			
+			Pool
 			
 
 			int MaxGen = 5;
