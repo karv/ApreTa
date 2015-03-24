@@ -138,14 +138,14 @@ namespace ApreTa
 		public override ContadorGen CuentaGen (bool Hereditario = true)
 		{
 			ContadorGen ret = new ContadorGen ();
-			ret [this.ToString ()] += 1; 
+			ret [this] += 1; 
 			foreach (var x in Genes) {
 				if (Hereditario) {
 					foreach (var y in x.CuentaGen(true)) {
 						ret [y.Key] += y.Value; 
 					}
 				} else {
-					ret [x.ToString ()] += 1;
+					ret [x] += 1;
 				}
 			}
 			return ret;
@@ -267,10 +267,11 @@ namespace ApreTa
 	/// <summary>
 	/// Clase que cuenta genes.
 	/// </summary>
-	public class ContadorGen:ListaPeso<string, int>
+	public class ContadorGen:ListaPeso<Gen, int>
 	{
 		public ContadorGen ():base((x,y) => x+y, 0)
 		{
+			Comparador = (x, y) => x.ToString() == y.ToString();
 		}
 	}
 }

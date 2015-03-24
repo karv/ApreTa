@@ -180,7 +180,7 @@ namespace ApreTa
 			int MaxGen = 5;
 			foreach (var x in Pool.OrderByDescending(x=> x.Value)) {
 				MaxGen--;
-				if (MaxGen >= 0)
+				if (MaxGen >= 0)					
 					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
 			}
 
