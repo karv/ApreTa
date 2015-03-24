@@ -36,6 +36,22 @@ namespace ApreTa
 			}
 		}
 
+		/// <summary>
+		/// Devuelve la genpool con peso.
+		/// </summary>
+		/// <returns>The gen.</returns>
+		public ContadorGen CuentaGen ()
+		{
+			ContadorGen ret = new ContadorGen ();
+			foreach (var x in Individuos) {
+				foreach (var y in x.Indiv.CuentaGen().Data) {
+					ret [y.Key] += y.Value;
+				}
+			}
+			ret.OrdenarPorValor ();
+			return ret;
+		}
+
 		List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
 		public const int MinIndiv = 100;
 		public const int MaxIndiv = 120;
@@ -130,11 +146,14 @@ namespace ApreTa
 		public void MuestraStats ()
 		{
 			Console.Clear ();
+			float BuenoPct = GetPctBuenos ();
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
 			Console.Write ("Máxima: {0} - {1}", Individuos [0].Punt, Individuos [0].Indiv);
 			if (Individuos [0].Indiv.Genética.Esbueno ())
 				Console.Write ("  BUENO");
+			Console.WriteLine ();
+			Console.Write ("% buenos: " + BuenoPct);
 			Console.WriteLine ();
 			// Escribir el pool
 			foreach (var x in Individuos) {
@@ -146,7 +165,26 @@ namespace ApreTa
 				}
 				Console.Write (string.Format ("{0} ", x.Indiv.ToString ()));
 			}
+			Console.WriteLine ();
+			Console.WriteLine ("La Gen pool:");
+			foreach (var x in CuentaGen().Data) {
+				Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
+			}
 
+		}
+
+		/// <summary>
+		/// Devuelve el % de Individuos buenos.
+		/// </summary>
+		/// <returns>The pct buenos.</returns>
+		public float GetPctBuenos ()
+		{
+			int ctr = 0;
+			foreach (var x in Individuos) {
+				if (x.Indiv.Genética.Esbueno ())
+					ctr++;
+			}
+			return (float)ctr / Individuos.Count;
 		}
 
 		/// <summary>

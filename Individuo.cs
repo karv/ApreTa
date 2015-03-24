@@ -27,6 +27,15 @@ namespace ApreTa
 		{
 			return Genética.ToString ();
 		}
+
+		/// <summary>
+		/// Devuelve la lista de genes con sus respectivas apariciones.
+		/// </summary>
+		/// <returns>La lista de genes.</returns>
+		public ContadorGen CuentaGen ()
+		{
+			return Genética.CuentaGen ();
+		}
 	}
 
 	/// <summary>

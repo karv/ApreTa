@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ListasExtra;
 
 namespace ApreTa
 {
@@ -54,6 +55,14 @@ namespace ApreTa
 		{
 			return base.GetHashCode ();
 		}
+
+		/// <summary>
+		/// Crea un diccionario con la información cualitativa de sus subgenes.
+		/// </summary>
+		/// <returns>Un ContadorGen (listapeso) con la información de apariencias de cada subgen.</returns>
+		/// <param name="Hereditario">Si es true, la búsqueda se hace recusrivamente. 
+		/// Si el false, lo hace sólo un paso.</param>
+		public abstract ContadorGen CuentaGen (bool Hereditario = true);
 	}
 
 	/// <summary>
@@ -119,6 +128,28 @@ namespace ApreTa
 			}
 
 		}
+
+		/// <summary>
+		/// Crea un diccionario con la información cualitativa de sus subgenes.
+		/// </summary>
+		/// <returns>Un ContadorGen (listapeso) con la información de apariencias de cada subgen.</returns>
+		/// <param name="Hereditario">Si es true, la búsqueda se hace recusrivamente. 
+		/// Si el false, lo hace sólo un paso.</param>
+		public override ContadorGen CuentaGen (bool Hereditario = true)
+		{
+			ContadorGen ret = new ContadorGen ();
+			ret [this.ToString ()] += 1; 
+			foreach (var x in Genes) {
+				if (Hereditario) {
+					foreach (var y in x.CuentaGen(true).Data) {
+						ret [y.Key] += y.Value; 
+					}
+				} else {
+					ret [x.ToString ()] += 1;
+				}
+			}
+			return ret;
+		}
 	}
 
 	/// <summary>
@@ -126,6 +157,11 @@ namespace ApreTa
 	/// </summary>
 	public class InstrucciónGen:Gen
 	{
+		public override ContadorGen CuentaGen (bool Hereditario)
+		{
+			return new ContadorGen ();
+		}
+
 		static readonly string[] _Símbolos = {
 			"!",
 			"+",
@@ -225,6 +261,16 @@ namespace ApreTa
 				}
 				break;
 			}
+		}
+	}
+
+	/// <summary>
+	/// Clase que cuenta genes.
+	/// </summary>
+	public class ContadorGen:ListaPeso<string, int>
+	{
+		public ContadorGen ():base((x,y) => x+y, 0)
+		{
 		}
 	}
 }
