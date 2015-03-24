@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ApreTa
@@ -175,11 +176,9 @@ namespace ApreTa
 			Console.WriteLine ("La Gen pool:");
 			ContadorGen Pool = CuentaGen();
 			
-			Pool
-			
 
 			int MaxGen = 5;
-			foreach (var x in Pool) {
+			foreach (var x in Pool.OrderByDescending(x=> x.Value)) {
 				MaxGen--;
 				if (MaxGen >= 0)
 					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
