@@ -28,6 +28,36 @@ namespace ApreTa
 		}
 
 		/// <summary>
+		/// Revisa si este gen es vengativo
+		/// Un gen es vengativo si (!h(1)) = >resp == 0
+		/// </summary>
+		/// <returns><c>true</c>, si es vengativo, <c>false</c> otherwise.</returns>
+		public bool EsVengativo (int MaxLong)
+		{
+			for (int i = 2; i < MaxLong; i++) {
+				if (!_EsVengativo (i))
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Revisa si el gen es vengativo en el turno n
+		/// </summary>
+		/// <returns><c>true</c>, if vengativo was esed, <c>false</c> otherwise.</returns>
+		/// <param name="n">Turno donde se revisa si es vengativo</param>
+		bool _EsVengativo (int n)
+		{
+			Individuo I = new Individuo ();
+			I.Genética = this;
+			foreach (var H in Historial.ObtenerPosiblesHistorias(n)) {
+				if (H.Data [1, H.Actual] == 0 && I.Ejecutar (H) == 1) // Si confías después de una traición
+					return false;
+			}
+			return true;
+		}
+
+		/// <summary>
 		/// Devuelve true si este gen es equivalente a otro dado.
 		/// </summary>
 		/// <returns><c>true</c>, if equivalente was esed, <c>false</c> otherwise.</returns>
@@ -271,7 +301,7 @@ namespace ApreTa
 	{
 		public ContadorGen ():base((x,y) => x+y, 0)
 		{
-			Comparador = (x, y) => x.ToString() == y.ToString();
+			Comparador = (x, y) => x.ToString () == y.ToString ();
 		}
 	}
 }

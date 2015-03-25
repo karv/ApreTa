@@ -332,5 +332,36 @@ namespace ApreTa
 			Data [1, Actual] = b;
 			Actual++;
 		}
+
+		/// <summary>
+		/// Enlista todos los posibles historiales, variando al jugador II.
+		/// El jugador I siempre jugará 0's
+		/// </summary>
+		/// <returns>Un arreglo enumerando a todos los Historiales.</returns>
+		/// <param name="Long">Longitud de las instancias de Historial a mostrar.</param>
+		public static Historial[] ObtenerPosiblesHistorias (int Long)
+			// TODO: Para evitar iteración, enumerar las historias con 2^Long (las que empiecen con 1 en expansión decimal, y convertirlos a Historiales vía función de Cantor.
+		{
+			List<Historial> ret = new List<Historial> ();
+			if (Long == 0) {
+				Historial H = new Historial ();
+				H.Actual = 0;
+				ret.Add (H);
+				return ret.ToArray ();
+			} else {
+				// Paso recursivo
+				Historial[] Iterador = ObtenerPosiblesHistorias (Long - 1);
+				foreach (var H in Iterador) { // Crear una copia para iterar
+					Historial Hi;
+					Hi = (Historial)H.MemberwiseClone (); // Si no funciona, hacer a Historial IClonable.
+					Hi.AgregaTurno (0, 0);
+					ret.Add (Hi);
+					Hi = (Historial)H.MemberwiseClone (); // idem
+					Hi.AgregaTurno (0, 1);
+					ret.Add (Hi);
+				}
+				return ret.ToArray ();
+			}
+		}
 	}
 }
