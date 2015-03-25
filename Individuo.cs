@@ -81,12 +81,12 @@ namespace ApreTa
 			for (int i = 0; i < H.Actual; i++) {
 				Console.Write (H.Data [0, i]);
 			}
-			Console.WriteLine ();
+			Console.WriteLine ("  - " + H.ObtenerPuntuación (0) + " || Nombre: " + H.Ind [0]);
 			Console.Write ("II|");
 			for (int i = 0; i < H.Actual; i++) {
 				Console.Write (H.Data [1, i]);
 			}
-			Console.WriteLine ();
+			Console.WriteLine ("  - " + H.ObtenerPuntuación (1) + " || Nombre: " + H.Ind [1]);
 		}
 
 		int PedirJugada (Historial H)

@@ -264,6 +264,8 @@ namespace ApreTa
 				Ind [0] = J;
 				Ind [1] = I;
 			}
+			H.Ind [0] = Ind [0].Indiv;
+			H.Ind [1] = Ind [1].Indiv;
 
 			// Ejecutar las rondas
 			while (H.Actual < IteracionesPorEncuentro) {
