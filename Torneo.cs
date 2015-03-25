@@ -9,6 +9,26 @@ namespace ApreTa
 	/// </summary>
 	public class Torneo
 	{
+		/// <summary>
+		/// Obtiene la puntuación si se juega con i, y el otro jugador juega con j
+		/// </summary>
+		public static float Puntuación (int a, int b)
+		{
+			if (a == 0) {
+				if (b == 0) {
+					return -1;
+				} else {
+					return 5;
+				}
+			} else { //a == 1
+				if (b == 0) {
+					return  0;
+				} else {
+					return 3;
+				}
+			}
+		}
+
 		public class EstructuraIndividuo: IComparable<EstructuraIndividuo>
 		{
 			/// <summary>
@@ -259,24 +279,9 @@ namespace ApreTa
 				//Agrega en el historial las últimas desiciones.
 				H.AgregaTurno (a, b);
 
-				// Modificar puntuación.
-				if (a == 0) {
-					if (b == 0) {
-						Ind [0].Punt += -1;
-						Ind [0].Punt += -1;
-					} else {
-						Ind [0].Punt += 5;
-						Ind [1].Punt += 0;
-					}
-				} else { //a == 1
-					if (b == 0) {
-						Ind [0].Punt += 0;
-						Ind [1].Punt += 5;
-					} else {
-						Ind [0].Punt += 3;
-						Ind [1].Punt += 3;
-					}
-				}
+				// Modificar la puntuación
+				Ind [0].Punt += Torneo.Puntuación (a, b);
+				Ind [1].Punt += Torneo.Puntuación (b, a);
 			}
 		}
 	}
@@ -291,6 +296,10 @@ namespace ApreTa
 		/// Devuelve el "turno" actual.
 		/// </summary>
 		public int Actual = 0;
+		/// <summary>
+		/// Los individuos en juego.
+		/// </summary>
+		public Individuo[] Ind = new Individuo[2];
 
 		public Historial Invertir ()
 		{
@@ -299,6 +308,18 @@ namespace ApreTa
 			for (int i = 0; i < Data.GetLength(1); i++) {
 				ret.Data [0, i] = Data [1, i];
 				ret.Data [1, i] = Data [0, i];
+			}
+			return ret;
+		}
+
+		public float ObtenerPuntuación (int i)
+		{
+			if (i < 0 || i > 1) {
+				throw new IndexOutOfRangeException ();
+			}
+			float ret = 0;
+			for (int j = 0; j < Actual; j++) {
+				ret += Torneo.Puntuación (Data [i, j], Data [1 - i, j]);
 			}
 			return ret;
 		}
