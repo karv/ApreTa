@@ -58,20 +58,20 @@ namespace ApreTa
 			return ret;
 		}
 
-		List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
-		public const int MinIndiv = 100;
-		public const int MaxIndiv = 1000;
+		public List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
+		public int MinIndiv = 100;
+		public int MaxIndiv = 1000;
 		/// <summary>
 		/// Número de encuentros por turno.
 		/// </summary>
-		public const int NumRondas = 10000;
+		public int NumRondas = 10000;
 		/// <summary>
 		/// Iteraciones de juego por encuentro.
 		/// </summary>
 		public const int IteracionesPorEncuentro = 10;
 		Random r = new Random ();
 
-		public Torneo ()
+		public void InicializaTorneo ()
 		{
 			// Agregar individuos sin gen hasta llegar al máximo.
 			while (Individuos.Count < MaxIndiv) {
@@ -82,16 +82,19 @@ namespace ApreTa
 		/// <summary>
 		/// Ejecuta un sólo turno.
 		/// </summary>
-		public void RunOnce ()
+		public void RunOnce (bool ForzarDiferente = false)
 		{
 			for (int i = 0; i < NumRondas; i++) {
 				// Seleccionar dos individuos.
 				EstructuraIndividuo[] I = new EstructuraIndividuo[2];
 				I [0] = Individuos [r.Next (Individuos.Count)];
-				I [1] = Individuos [r.Next (Individuos.Count)];
+
+				do {
+					I [1] = Individuos [r.Next (Individuos.Count)];
+				} while (ForzarDiferente && I[0] == I[1]);
+
 				I [0].Juegos++;
 				I [1].Juegos++;
-
 				// Hacerlos interactuar.
 				Encuentro (I [0], I [1]);
 			}
@@ -108,7 +111,14 @@ namespace ApreTa
 				MuestraStats ();
 				ReplicarAdaptados ();
 				ResetScore ();
-			}		
+
+				while (Console.KeyAvailable) {
+					ConsoleKeyInfo kp = Console.ReadKey ();
+					if (kp.KeyChar == ' ') {
+						Torneo.Encuentro (new IndividuoHumano (), Individuos [r.Next (Individuos.Count)].Indiv);
+					}
+				}
+			}
 		}
 
 		public void DespuntuarLargos ()
@@ -201,6 +211,22 @@ namespace ApreTa
 			return (float)ctr / Individuos.Count;
 		}
 
+		public static int Encuentro (Individuo I, Individuo J)
+		{
+			Torneo Trn = new Torneo ();
+			EstructuraIndividuo[] EI = new EstructuraIndividuo[2];
+			EI [0] = new EstructuraIndividuo (I);
+			EI [1] = new EstructuraIndividuo (J);
+			Trn.Individuos.Add (new EstructuraIndividuo (I));
+			Trn.Individuos.Add (new EstructuraIndividuo (J));
+			Trn.NumRondas = 1;
+			Trn.MaxIndiv = 2;
+			Trn.MinIndiv = 2;
+			Trn.RunOnce (true);
+
+			return Trn.Individuos [0].Punt < Trn.Individuos [1].Punt ? 0 : 1;
+		}
+
 		/// <summary>
 		/// Ejecuta un encuentro entre dos individuos.
 		/// </summary>
@@ -221,23 +247,13 @@ namespace ApreTa
 
 			// Ejecutar las rondas
 			while (H.Actual < IteracionesPorEncuentro) {
-				H.Actual++;
+				// H.Actual++;
 
-				MemStack MSa = new MemStack ();
-				MemStack MSb = new MemStack ();
-				int a = 0;
-				int b = 0;
+				int a;
+				int b;
 
-				Ind [0].Indiv.Genética.Ejecutar (MSa, H);
-				Ind [1].Indiv.Genética.Ejecutar (MSb, H);
-
-				if (MSa.Count > 0)
-					a = MSa.Pop ();
-				if (MSb.Count > 0)
-					b = MSb.Pop ();
-
-				a = a == 0 ? 0 : 1;
-				b = b == 0 ? 0 : 1;
+				a = Ind [0].Indiv.Ejecutar (H);
+				b = Ind [1].Indiv.Ejecutar (H);
 
 				// Los jugadores escogen a y b respectivamente.
 				//Agrega en el historial las últimas desiciones.

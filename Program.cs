@@ -28,6 +28,7 @@ namespace ApreTa
 			//Ev.Run ();
 
 			Torneo T = new Torneo ();
+			T.InicializaTorneo ();
 			T.Run ();
 
 		}
