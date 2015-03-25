@@ -35,9 +35,8 @@ namespace ApreTa
 			{
 				return string.Format ("{0}\t {1}", Punt, Indiv);
 			}
-
 			// Comparador
-			int IComparable<EstructuraIndividuo>.CompareTo(EstructuraIndividuo cmp)
+			int IComparable<EstructuraIndividuo>.CompareTo (EstructuraIndividuo cmp)
 			{
 
 				return cmp != null && Punt < cmp.Punt ? 1 : -1;
@@ -143,7 +142,7 @@ namespace ApreTa
 		/// </summary>
 		public void MatarMenosAdaptados ()
 		{
-			Individuos.Sort();
+			Individuos.Sort ();
 			Individuos.RemoveRange (MinIndiv, MaxIndiv - MinIndiv);
 		}
 
@@ -175,16 +174,15 @@ namespace ApreTa
 			}
 			Console.WriteLine ();
 			Console.WriteLine ("La Gen pool:");
-			ContadorGen Pool = CuentaGen();
+			ContadorGen Pool = CuentaGen ();
 			
 
 			int MaxGen = 5;
 			foreach (var x in Pool.OrderByDescending(x=> x.Value)) {
 				MaxGen--;
-				if (MaxGen >= 0)
-				{
-					Console.ForegroundColor = x.Key.Esbueno() ? ConsoleColor.Blue : ConsoleColor.White;
-					Console.WriteLine(string.Format("{0}\t {1}", x.Key, x.Value));
+				if (MaxGen >= 0) {
+					Console.ForegroundColor = x.Key.Esbueno () ? ConsoleColor.Blue : ConsoleColor.White;
+					Console.WriteLine (string.Format ("{0}\t {1}", x.Key, x.Value));
 				}					
 			}
 		}
@@ -267,6 +265,9 @@ namespace ApreTa
 		}
 	}
 
+	/// <summary>
+	/// Representa el historial de un juego.
+	/// </summary>
 	public class Historial
 	{
 		public int[,] Data;
