@@ -10,7 +10,7 @@ namespace ApreTa
 		/// <summary>
 		/// Genotipo del individuo.
 		/// </summary>
-		public Gen Genética = new GrupoGen ();
+		public GrupoGen Genética = new GrupoGen ();
 
 		/// <summary>
 		/// Crea una réplica genética -mutada- de este individuo.
