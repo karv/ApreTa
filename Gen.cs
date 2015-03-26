@@ -12,8 +12,12 @@ namespace ApreTa
 		protected Random r = new Random ();
 		protected ConsoleColor clr = ConsoleColor.White;
 
+		/// <summary>
+		/// Réplica asexual
+		/// </summary>
+		/// <param name="Coef">Coef.</param>
 		public abstract Gen Replicar (float Coef = 1);
-
+		//public abstract Gen Replicar (Gen Pareja)
 		public abstract void Ejecutar (MemStack Mem, Historial H = null);
 
 		public bool Esbueno ()
@@ -49,7 +53,7 @@ namespace ApreTa
 		bool _EsVengativo (int n, int maxn)
 		{
 			Individuo I = new Individuo ();
-			I.Genética = this;
+			I.Genética = (GrupoGen)this;
 			foreach (var H in Historial.ObtenerPosiblesHistorias(n, maxn)) {
 				if (H.Data [1, H.Actual] == 0 && I.Ejecutar (H) == 1) // Si confías después de una traición
 					return false;

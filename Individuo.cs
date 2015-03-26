@@ -18,7 +18,7 @@ namespace ApreTa
 		public Individuo Replicar ()
 		{
 			Individuo ret = new Individuo ();
-			ret.Genética = Genética.Replicar ();
+			ret.Genética = (GrupoGen)Genética.Replicar ();
 
 			return ret;
 		}
