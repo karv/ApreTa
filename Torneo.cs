@@ -211,7 +211,7 @@ namespace ApreTa
 				Console.Write (string.Format ("{0} ", x.Indiv.ToString ()));
 			}
 			Console.WriteLine ();
-			Console.WriteLine ("La Gen pool:");
+			Console.WriteLine ("La Genepool:");
 			ContadorGen Pool = CuentaGen ();
 			
 
