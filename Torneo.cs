@@ -170,8 +170,12 @@ namespace ApreTa
 			EstructuraIndividuo I1, I2;
 			while (Individuos.Count < MaxIndiv) {
 				I1 = Individuos [r.Next (Individuos.Count)];
-				I2 = Individuos [r.Next (Individuos.Count)];
-				Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar (I2.Indiv)));
+				if (I1.Indiv.Genética.ReplicaSexual) {
+					I2 = Individuos [r.Next (Individuos.Count)];
+					Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar (I2.Indiv)));
+				} else {
+					Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar ()));
+				}
 			}
 		}
 
@@ -195,6 +199,7 @@ namespace ApreTa
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
 			Console.Write ("Máxima: {0} - {1}", Individuos [0].Punt, Individuos [0].Indiv);
+			Console.Write (Individuos [0].Indiv.Genética.ReplicaSexual ? "S" : "a");
 			if (Individuos [0].Indiv.Genética.Esbueno ())
 				Console.Write ("  Bueno");
 			if (MostrarVengativo && Individuos [0].Indiv.Genética.EsVengativo (IteracionesPorEncuentro))

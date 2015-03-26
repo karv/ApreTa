@@ -37,7 +37,7 @@ namespace ApreTa
 
 		public override string ToString ()
 		{
-			return Genética.ToString ();
+			return (Genética.ReplicaSexual ? "" : "a") + Genética.ToString ();
 		}
 
 		/// <summary>

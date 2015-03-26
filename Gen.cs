@@ -11,6 +11,11 @@ namespace ApreTa
 	{
 		protected Random r = new Random ();
 		protected ConsoleColor clr = ConsoleColor.White;
+		/// <summary>
+		/// Devuelve o establece si la réplica se hace en modo sexual.
+		/// En caso contrario, hace réplica asexial, obviamente.
+		/// </summary>
+		public bool ReplicaSexual = true;
 
 		/// <summary>
 		/// Réplica asexual
@@ -138,6 +143,10 @@ namespace ApreTa
 				int indAgrega = r.Next (ret._Genes.Count + 1); //Índice para agregar
 				ret._Genes.Insert (indAgrega, InstrucciónGen.Aleatorio (r));
 			}
+
+			// Estado de Replicar
+			if (r.NextDouble () < 0.001 * Coef)
+				ReplicaSexual = !ReplicaSexual;
 
 			// Dividir gen
 			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
