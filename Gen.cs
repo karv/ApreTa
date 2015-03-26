@@ -35,7 +35,7 @@ namespace ApreTa
 		public bool EsVengativo (int MaxLong)
 		{
 			for (int i = 2; i < MaxLong; i++) {
-				if (!_EsVengativo (i))
+				if (!_EsVengativo (i, MaxLong))
 					return false;
 			}
 			return true;
@@ -46,11 +46,11 @@ namespace ApreTa
 		/// </summary>
 		/// <returns><c>true</c>, if vengativo was esed, <c>false</c> otherwise.</returns>
 		/// <param name="n">Turno donde se revisa si es vengativo</param>
-		bool _EsVengativo (int n)
+		bool _EsVengativo (int n, int maxn)
 		{
 			Individuo I = new Individuo ();
 			I.Genética = this;
-			foreach (var H in Historial.ObtenerPosiblesHistorias(n)) {
+			foreach (var H in Historial.ObtenerPosiblesHistorias(n, maxn)) {
 				if (H.Data [1, H.Actual] == 0 && I.Ejecutar (H) == 1) // Si confías después de una traición
 					return false;
 			}

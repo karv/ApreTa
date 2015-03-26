@@ -90,6 +90,12 @@ namespace ApreTa
 		/// </summary>
 		public const int IteracionesPorEncuentro = 10;
 		Random r = new Random ();
+		// Variables de opciones
+		/// <summary>
+		/// ¿El mejor resultado muestra si es vengativo?
+		/// Si es true, puede ralentizar el proceso.
+		/// </summary>
+		public bool MostrarVengativo = false;
 
 		public void InicializaTorneo ()
 		{
@@ -188,7 +194,9 @@ namespace ApreTa
 			//Console.ForegroundColor = Pool[0].Jug.clr;
 			Console.Write ("Máxima: {0} - {1}", Individuos [0].Punt, Individuos [0].Indiv);
 			if (Individuos [0].Indiv.Genética.Esbueno ())
-				Console.Write ("  BUENO");
+				Console.Write ("  Bueno");
+			if (MostrarVengativo && Individuos [0].Indiv.Genética.EsVengativo (IteracionesPorEncuentro))
+				Console.Write ("  Vengativo");
 			Console.WriteLine ();
 			Console.Write ("% buenos: " + BuenoPct);
 			Console.WriteLine ();
@@ -339,18 +347,19 @@ namespace ApreTa
 		/// </summary>
 		/// <returns>Un arreglo enumerando a todos los Historiales.</returns>
 		/// <param name="Long">Longitud de las instancias de Historial a mostrar.</param>
-		public static Historial[] ObtenerPosiblesHistorias (int Long)
+		public static Historial[] ObtenerPosiblesHistorias (int Long, int MaxLong)
 			// TODO: Para evitar iteración, enumerar las historias con 2^Long (las que empiecen con 1 en expansión decimal, y convertirlos a Historiales vía función de Cantor.
 		{
 			List<Historial> ret = new List<Historial> ();
 			if (Long == 0) {
 				Historial H = new Historial ();
+				H.Data = new int[2, MaxLong];
 				H.Actual = 0;
 				ret.Add (H);
 				return ret.ToArray ();
 			} else {
 				// Paso recursivo
-				Historial[] Iterador = ObtenerPosiblesHistorias (Long - 1);
+				Historial[] Iterador = ObtenerPosiblesHistorias (Long - 1, MaxLong);
 				foreach (var H in Iterador) { // Crear una copia para iterar
 					Historial Hi;
 					Hi = (Historial)H.MemberwiseClone (); // Si no funciona, hacer a Historial IClonable.
