@@ -23,6 +23,18 @@ namespace ApreTa
 			return ret;
 		}
 
+		/// <summary>
+		/// Realiza una réplica sexual de un individuo.
+		/// </summary>
+		/// <param name="I">Pareja sexual</param>
+		public Individuo Replicar (Individuo I)
+		{
+			Individuo ret = new Individuo ();
+			ret.Genética = Genética.Replicar (I.Genética);
+
+			return ret;
+		}
+
 		public override string ToString ()
 		{
 			return Genética.ToString ();
