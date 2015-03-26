@@ -167,9 +167,11 @@ namespace ApreTa
 		/// </summary>
 		public void ReplicarAdaptados ()
 		{
+			EstructuraIndividuo I1, I2;
 			while (Individuos.Count < MaxIndiv) {
-				EstructuraIndividuo I = Individuos [r.Next (Individuos.Count)];
-				Individuos.Add (new EstructuraIndividuo (I.Indiv.Replicar ()));
+				I1 = Individuos [r.Next (Individuos.Count)];
+				I2 = Individuos [r.Next (Individuos.Count)];
+				Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar (I2.Indiv)));
 			}
 		}
 

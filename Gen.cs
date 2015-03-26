@@ -300,10 +300,9 @@ namespace ApreTa
 			int StackSize = Mem.Count;
 			switch (Instrucción) {
 			case "!":
-				if (StackSize >= 1)
-				{
+				if (StackSize >= 1) {
 					int t = Mem.Pop ();
-					Mem.Push(t == 0? 1 : 0)
+					Mem.Push (t == 0 ? 1 : 0);
 				}
 				break;
 			case "+":
