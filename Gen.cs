@@ -104,7 +104,17 @@ namespace ApreTa
 	/// </summary>
 	public class GrupoGen:Gen
 	{
-		List<Gen> Genes = new List<Gen> ();
+		List<Gen> _Genes = new List<Gen> ();
+
+		/// <summary>
+		/// Devuelve una copia de la lista de genes.
+		/// </summary>
+		/// <value>The genes.</value>
+		public Gen[] Genes {
+			get {
+				return _Genes.ToArray ();
+			}
+		}
 
 		/// <summary>
 		/// Replica este grupo genético.
@@ -112,31 +122,31 @@ namespace ApreTa
 		public override Gen Replicar (float Coef = 1)
 		{
 			GrupoGen ret = new GrupoGen ();
-			foreach (var x in Genes) {
+			foreach (var x in _Genes) {
 				if (r.NextDouble () >= 0.1 * Coef) // La probabilidad de eliminación base es 0.1
-					ret.Genes.Add (x.Replicar (Coef * 0.7f)); // Probabilidad recursiva/iterada es de 0.7
+					ret._Genes.Add (x.Replicar (Coef * 0.7f)); // Probabilidad recursiva/iterada es de 0.7
 			}
 
 			// AgregarInstrucción
 			while (r.NextDouble() < Coef * 0.1) {
-				int indAgrega = r.Next (ret.Genes.Count + 1); //Índice para agregar
-				ret.Genes.Insert (indAgrega, InstrucciónGen.Aleatorio (r));
+				int indAgrega = r.Next (ret._Genes.Count + 1); //Índice para agregar
+				ret._Genes.Insert (indAgrega, InstrucciónGen.Aleatorio (r));
 			}
 
 			// Dividir gen
 			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
-				int indCorte = r.Next (ret.Genes.Count + 1);
+				int indCorte = r.Next (ret._Genes.Count + 1);
 				GrupoGen G0 = new GrupoGen ();
 				GrupoGen G1 = new GrupoGen ();
-				for (int i = 0; i < ret.Genes.Count; i++) {
+				for (int i = 0; i < ret._Genes.Count; i++) {
 					if (i <= indCorte)
-						G0.Genes.Add (ret.Genes [i]);
+						G0._Genes.Add (ret._Genes [i]);
 					else
-						G1.Genes.Add (ret.Genes [i]);
+						G1._Genes.Add (ret._Genes [i]);
 				}
-				ret.Genes = new List<Gen> ();
-				ret.Genes.Add (G0);
-				ret.Genes.Add (G1);
+				ret._Genes = new List<Gen> ();
+				ret._Genes.Add (G0);
+				ret._Genes.Add (G1);
 			}
 			// Color (no entra
 			if (r.NextDouble () < 0.05)
@@ -144,10 +154,55 @@ namespace ApreTa
 			return ret;
 		}
 
+		/// <summary>
+		/// Replica sexualmente un individuo.
+		/// Incluye mutaciones.
+		/// </summary>
+		/// <param name="Pareja">Pareja sexual</param>
+		public GrupoGen Replicar (GrupoGen Pareja, float CoefMut = 1)
+		{
+			return (GrupoGen)GrupoGen.Replicar (this, Pareja).Replicar (CoefMut);
+		}
+
+		/// <summary>
+		/// Replica sexualmente un GrupoGen, a partir de dos GrupoGen.
+		/// Excluye mutación
+		/// </summary>
+		/// <param name="G1">Un GrupoGen</param>
+		/// <param name="G2">Un GrupoGen</param>
+		public static GrupoGen Replicar (GrupoGen G1, GrupoGen G2, float prob = 0.5f, Random r = null)
+		{
+			if (r == null)
+				r = new Random ();
+			GrupoGen tmp = new GrupoGen ();
+			GrupoGen ret = new GrupoGen ();
+			// 大体:
+			// Agregar cada gen en G1 (con probabilidad prob), luego hacer lo mismo con G2.
+			// Finalmente reordenarlos aleatoriamente.
+
+			foreach (var x in G1.Genes) {
+				if (r.NextDouble () < prob)
+					tmp._Genes.Add (x);
+			}
+
+			foreach (var x in G2.Genes) {
+				if (r.NextDouble () < prob)
+					tmp._Genes.Add (x);
+			}
+
+			// Reordenar
+			foreach (var x in tmp._Genes) {
+				ret._Genes.Insert (r.Next (ret._Genes.Count + 1), x);
+			}
+
+			return ret;
+
+		}
+
 		public override string ToString ()
 		{
 			string ret = "(";
-			foreach (var x in Genes) {
+			foreach (var x in _Genes) {
 				ret += x.ToString ();
 			}
 			ret += ")";
@@ -157,7 +212,7 @@ namespace ApreTa
 
 		public override void Ejecutar (MemStack Mem, Historial H = null)
 		{
-			foreach (var x in Genes) {
+			foreach (var x in _Genes) {
 				x.Ejecutar (Mem, H);
 			}
 
@@ -173,7 +228,7 @@ namespace ApreTa
 		{
 			ContadorGen ret = new ContadorGen ();
 			ret [this] += 1; 
-			foreach (var x in Genes) {
+			foreach (var x in _Genes) {
 				if (Hereditario) {
 					foreach (var y in x.CuentaGen(true)) {
 						ret [y.Key] += y.Value; 
