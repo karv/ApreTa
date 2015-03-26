@@ -93,12 +93,12 @@ namespace ApreTa
 			for (int i = 0; i < H.Actual; i++) {
 				Console.Write (H.Data [0, i]);
 			}
-			Console.WriteLine ("  - " + H.ObtenerPuntuación (0) + " || Nombre: " + H.Ind [0]);
+			Console.WriteLine ("  - " + H.ObtenerPuntuación (0) + " || Nombre: " + H.Ind [0].Genética.StringEfectivo ());
 			Console.Write ("II|");
 			for (int i = 0; i < H.Actual; i++) {
 				Console.Write (H.Data [1, i]);
 			}
-			Console.WriteLine ("  - " + H.ObtenerPuntuación (1) + " || Nombre: " + H.Ind [1]);
+			Console.WriteLine ("  - " + H.ObtenerPuntuación (1) + " || Nombre: " + H.Ind [1].Genética.StringEfectivo ());
 		}
 
 		int PedirJugada (Historial H)
