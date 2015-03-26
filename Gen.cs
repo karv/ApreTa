@@ -71,6 +71,12 @@ namespace ApreTa
 			return ToString () == G.ToString ();
 		}
 
+		/// <summary>
+		/// Devuelve el String efectivo del gen (ie, ToString sin paréntesis)
+		/// </summary>
+		/// <returns>The efectivo.</returns>
+		public abstract string StringEfectivo ();
+
 		public static bool EsEquivalente (Gen G1, Gen G2)
 		{
 			return G1.EsEquivalente (G2);
@@ -210,6 +216,18 @@ namespace ApreTa
 			return ret;
 		}
 
+		public override string StringEfectivo ()
+		{
+			string ret = "";
+			foreach (var x in _Genes) {
+				ret += x.StringEfectivo ();
+			}
+			ret += "";
+
+			return ret;
+
+		}
+
 		public override void Ejecutar (MemStack Mem, Historial H = null)
 		{
 			foreach (var x in _Genes) {
@@ -289,6 +307,11 @@ namespace ApreTa
 		}
 
 		public override string ToString ()
+		{
+			return Instrucción;
+		}
+
+		public override string StringEfectivo ()
 		{
 			return Instrucción;
 		}
