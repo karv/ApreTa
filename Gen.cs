@@ -15,7 +15,7 @@ namespace ApreTa
 		/// Devuelve o establece si la réplica se hace en modo sexual.
 		/// En caso contrario, hace réplica asexial, obviamente.
 		/// </summary>
-		public bool ReplicaSexual = true;
+		public bool ReplicaSexual = false;
 
 		/// <summary>
 		/// Réplica asexual
@@ -145,8 +145,7 @@ namespace ApreTa
 			}
 
 			// Estado de Replicar
-			if (r.NextDouble () < 0.001 * Coef)
-				ReplicaSexual = !ReplicaSexual;
+			ret.ReplicaSexual = r.NextDouble () < 0.001 ? !ReplicaSexual : ReplicaSexual;
 
 			// Dividir gen
 			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
@@ -166,6 +165,7 @@ namespace ApreTa
 			// Color (no entra
 			if (r.NextDouble () < 0.05)
 				clr = (ConsoleColor)r.Next (16);
+
 			return ret;
 		}
 
@@ -209,6 +209,9 @@ namespace ApreTa
 			foreach (var x in tmp._Genes) {
 				ret._Genes.Insert (r.Next (ret._Genes.Count + 1), x);
 			}
+
+			// Note que llegar aquí no implica que ambos sean sexualmente replicables, al menos uno lo es. 
+			ret.ReplicaSexual = r.Next (2) == 0 ? G1.ReplicaSexual : G2.ReplicaSexual; 
 
 			return ret;
 
@@ -310,6 +313,7 @@ namespace ApreTa
 		public override Gen Replicar (float Coef = 1)
 		{
 			InstrucciónGen ret = new InstrucciónGen ();
+			ret.ReplicaSexual = ReplicaSexual;
 			ret.Instrucción = Instrucción;
 
 			return ret;
