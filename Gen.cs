@@ -15,7 +15,16 @@ namespace ApreTa
 		/// Devuelve o establece si la réplica se hace en modo sexual.
 		/// En caso contrario, hace réplica asexial, obviamente.
 		/// </summary>
-		public bool ReplicaSexual = false;
+		bool _ReplicaSexual = true;
+
+		public bool ReplicaSexual {
+			get {
+				return _ReplicaSexual;
+			}
+			set {
+				_ReplicaSexual = value;
+			}
+		}
 
 		/// <summary>
 		/// Réplica asexual
@@ -145,7 +154,7 @@ namespace ApreTa
 			}
 
 			// Estado de Replicar
-			ret.ReplicaSexual = r.NextDouble () < 0.001 ? !ReplicaSexual : ReplicaSexual;
+			ret.ReplicaSexual = r.NextDouble () < 0.001 * Coef ? !ReplicaSexual : ReplicaSexual;
 
 			// Dividir gen
 			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
