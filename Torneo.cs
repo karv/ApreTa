@@ -24,13 +24,17 @@ namespace ApreTa
 				if (b == 0) {
 					return  0;
 				} else {
-					return 3;
+					return 4;
 				}
 			}
 		}
 
 		public class EstructuraIndividuo: IComparable<EstructuraIndividuo>
 		{
+			/// <summary>
+			/// Determina si el usuario seguirá a este individuo.
+			/// </summary>
+			public bool Siguiendo = false;
 			/// <summary>
 			/// Puntuación.
 			/// </summary>
@@ -80,7 +84,7 @@ namespace ApreTa
 
 		public List<EstructuraIndividuo> Individuos = new List<EstructuraIndividuo> ();
 		public int MinIndiv = 100;
-		public int MaxIndiv = 1000;
+		public int MaxIndiv = 150;
 		/// <summary>
 		/// Número de encuentros por turno.
 		/// </summary>
@@ -88,7 +92,7 @@ namespace ApreTa
 		/// <summary>
 		/// Iteraciones de juego por encuentro.
 		/// </summary>
-		public const int IteracionesPorEncuentro = 10;
+		public int IteracionesPorEncuentro = 10;
 		Random r = new Random ();
 		// Variables de opciones
 		/// <summary>
@@ -101,7 +105,7 @@ namespace ApreTa
 		{
 			// Agregar individuos sin gen hasta llegar al máximo.
 			while (Individuos.Count < MaxIndiv) {
-				Individuos.Add (new EstructuraIndividuo ());
+				Individuos.Add (new EstructuraIndividuo (new Individuo ("")));
 			}
 		}
 
@@ -126,6 +130,8 @@ namespace ApreTa
 			}
 		}
 
+		float MinSobrevivir;
+
 		/// <summary>
 		/// Entra al ciclo principal.
 		/// </summary>
@@ -139,9 +145,20 @@ namespace ApreTa
 				ResetScore ();
 
 				while (Console.KeyAvailable) {
-					ConsoleKeyInfo kp = Console.ReadKey ();
-					if (kp.KeyChar == ' ') {
+					ConsoleKeyInfo kp = Console.ReadKey (true);
+					if (kp.KeyChar == ' ') {// Humano vs individuo al azar
 						Torneo.Encuentro (new IndividuoHumano (), Individuos [r.Next (Individuos.Count)].Indiv);
+					}
+					if (kp.KeyChar == '<') {// Agrega un individuo en observacion
+						Individuo I = new Individuo (Console.ReadLine ());
+						EstructuraIndividuo J = new EstructuraIndividuo (I);
+						J.Siguiendo = true;
+						Individuos.Add (J);
+					}
+					if (kp.KeyChar == 'z') {// Peleas contra 1h
+						Individuo I = new Individuo ("1h0i0=?");
+
+						Torneo.Encuentro (new IndividuoHumano (), I);
 					}
 				}
 			}
@@ -186,8 +203,22 @@ namespace ApreTa
 		/// </summary>
 		public void MatarMenosAdaptados ()
 		{
+			// Normalizar puntuación
+			foreach (var x in Individuos) {
+				if (x.Juegos > 0)
+					x.Punt /= x.Juegos;
+			}
+
 			Individuos.Sort ();
-			Individuos.RemoveRange (MinIndiv, MaxIndiv - MinIndiv);
+			while (Individuos.Count > MinIndiv) {
+				EstructuraIndividuo rem = Individuos [Individuos.Count - 1];
+				if (rem.Siguiendo) {
+					Console.WriteLine (string.Format ("Se extingue {0} con puntuación de {1}", rem.Indiv, rem.Punt));
+					Console.ReadLine ();
+				}
+				Individuos.Remove (rem);
+			}
+			MinSobrevivir = Individuos [Individuos.Count - 1].Punt;
 		}
 
 		/// <summary>
@@ -200,8 +231,7 @@ namespace ApreTa
 			float BuenoPct = GetPctBuenos ();
 			// Escribir máxima puntuación y mínima.
 			//Console.ForegroundColor = Pool[0].Jug.clr;
-			Console.Write ("Máxima: {0} - {1}", Individuos [0].Punt, Individuos [0].Indiv);
-			Console.Write (Individuos [0].Indiv.Genética.ReplicaSexual ? "S" : "a");
+			Console.WriteLine ("Máxima: {0} - {1}\nSobrevivir: {2}", Individuos [0].Punt, Individuos [0].Indiv, MinSobrevivir);
 			if (Individuos [0].Indiv.Genética.Esbueno ())
 				Console.Write ("  Bueno");
 			if (MostrarVengativo && Individuos [0].Indiv.Genética.EsVengativo (IteracionesPorEncuentro))
@@ -273,8 +303,6 @@ namespace ApreTa
 			EstructuraIndividuo[] Ind = new EstructuraIndividuo[2];
 			Historial H = new Historial ();
 
-			H.Data = new int[2, IteracionesPorEncuentro];
-
 			if (r.Next (2) == 0) {
 				Ind [0] = I;
 				Ind [1] = J;
@@ -285,6 +313,10 @@ namespace ApreTa
 			H.Ind [0] = Ind [0].Indiv;
 			H.Ind [1] = Ind [1].Indiv;
 
+			if (Ind [0].Siguiendo || Ind [1].Siguiendo) {
+				Console.Write ("");
+			}
+
 			// Ejecutar las rondas
 			while (H.Actual < IteracionesPorEncuentro) {
 				// H.Actual++;
@@ -293,15 +325,27 @@ namespace ApreTa
 				int b;
 
 				a = Ind [0].Indiv.Ejecutar (H);
-				b = Ind [1].Indiv.Ejecutar (H);
+				b = Ind [1].Indiv.Ejecutar (H.Invertir ());
 
 				// Los jugadores escogen a y b respectivamente.
 				//Agrega en el historial las últimas desiciones.
 				H.AgregaTurno (a, b);
 
 				// Modificar la puntuación
-				Ind [0].Punt += Torneo.Puntuación (a, b);
-				Ind [1].Punt += Torneo.Puntuación (b, a);
+				Ind [0].Punt += Torneo.Puntuación (a, b) / IteracionesPorEncuentro;
+				Ind [1].Punt += Torneo.Puntuación (b, a) / IteracionesPorEncuentro;
+			}
+			if (Ind [0].Siguiendo || Ind [1].Siguiendo) {
+				Console.WriteLine (string.Format ("{0}:{1}\n{2}:{3}", Ind [0].Indiv, H.ObtenerPuntuación (0), Ind [1].Indiv, H.ObtenerPuntuación (1)));
+				if (Console.ReadLine () != "") {
+					// Mostrar el historial
+					for (int i = 0; i < 2; i++) {
+						for (int j = 0; j < H.Count; j++) {
+							Console.Write (H [i, j]);
+						}
+						Console.WriteLine (" - " + H.Ind [i]);
+					}
+				}
 			}
 		}
 	}
@@ -309,13 +353,23 @@ namespace ApreTa
 	/// <summary>
 	/// Representa el historial de un juego.
 	/// </summary>
-	public class Historial
+	public class Historial : List<Tuple<int, int>>
 	{
-		public int[,] Data;
+		public int this [int Player, int Inning] {
+			get {
+				return Player == 0 ? base [Inning].Item1 : base [Inning].Item2;
+			}
+		}
+
 		/// <summary>
 		/// Devuelve el "turno" actual.
 		/// </summary>
-		public int Actual = 0;
+		public int Actual {
+			get {
+				return Count;
+			}
+		}
+
 		/// <summary>
 		/// Los individuos en juego.
 		/// </summary>
@@ -324,11 +378,11 @@ namespace ApreTa
 		public Historial Invertir ()
 		{
 			Historial ret = new Historial ();
-			ret.Data = new int[2, Data.GetLength (1)];
-			for (int i = 0; i < Data.GetLength(1); i++) {
-				ret.Data [0, i] = Data [1, i];
-				ret.Data [1, i] = Data [0, i];
+			for (int i = 0; i < Actual; i++) {
+				ret.Add (new Tuple<int, int> (this [1, i], this [0, i]));
 			}
+			ret.Ind [0] = Ind [1];
+			ret.Ind [1] = Ind [0];
 			return ret;
 		}
 
@@ -339,16 +393,14 @@ namespace ApreTa
 			}
 			float ret = 0;
 			for (int j = 0; j < Actual; j++) {
-				ret += Torneo.Puntuación (Data [i, j], Data [1 - i, j]);
+				ret += Torneo.Puntuación (this [i, j], this [1 - i, j]);
 			}
 			return ret;
 		}
 
 		public void AgregaTurno (int a, int b)
 		{
-			Data [0, Actual] = a;
-			Data [1, Actual] = b;
-			Actual++;
+			Add (new Tuple<int, int> (a, b));
 		}
 
 		/// <summary>
@@ -357,19 +409,17 @@ namespace ApreTa
 		/// </summary>
 		/// <returns>Un arreglo enumerando a todos los Historiales.</returns>
 		/// <param name="Long">Longitud de las instancias de Historial a mostrar.</param>
-		public static Historial[] ObtenerPosiblesHistorias (int Long, int MaxLong)
+		public static Historial[] ObtenerPosiblesHistorias (int Long)
 			// TODO: Para evitar iteración, enumerar las historias con 2^Long (las que empiecen con 1 en expansión decimal, y convertirlos a Historiales vía función de Cantor.
 		{
 			List<Historial> ret = new List<Historial> ();
 			if (Long == 0) {
 				Historial H = new Historial ();
-				H.Data = new int[2, MaxLong];
-				H.Actual = 0;
 				ret.Add (H);
 				return ret.ToArray ();
 			} else {
 				// Paso recursivo
-				Historial[] Iterador = ObtenerPosiblesHistorias (Long - 1, MaxLong);
+				Historial[] Iterador = ObtenerPosiblesHistorias (Long - 1);
 				foreach (var H in Iterador) { // Crear una copia para iterar
 					Historial Hi;
 					Hi = (Historial)H.MemberwiseClone (); // Si no funciona, hacer a Historial IClonable.

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ApreTa
 {
@@ -11,6 +12,24 @@ namespace ApreTa
 		/// Genotipo del individuo.
 		/// </summary>
 		public GrupoGen Genética = new GrupoGen ();
+
+		public Individuo ()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApreTa.Individuo"/> class.
+		/// </summary>
+		/// <param name="s">Secuencia de instrucciones genéticas.</param>
+		public Individuo (string s)
+		{
+			InstrucciónGen G;
+			foreach (var x in s) {
+				G = new InstrucciónGen ();
+				G.Instrucción = x.ToString ();
+				Genética.AddGen (G);
+			}
+		}
 
 		/// <summary>
 		/// Crea una réplica genética -mutada- de este individuo.
@@ -67,6 +86,14 @@ namespace ApreTa
 	/// </summary>
 	public class MemStack:System.Collections.Generic.Stack<int>
 	{
+		public override string ToString ()
+		{
+			string ret = "[" + Peek ().ToString () + "]";
+			foreach (var x in this) {
+				ret += x.ToString ();
+			}
+			return ret;
+		}
 	}
 
 	/// <summary>
@@ -91,12 +118,12 @@ namespace ApreTa
 		{
 			Console.Write ("I |");
 			for (int i = 0; i < H.Actual; i++) {
-				Console.Write (H.Data [0, i]);
+				Console.Write (H [0, i]);
 			}
 			Console.WriteLine ("  - " + H.ObtenerPuntuación (0) + " || Nombre: " + H.Ind [0].Genética.StringEfectivo ());
 			Console.Write ("II|");
 			for (int i = 0; i < H.Actual; i++) {
-				Console.Write (H.Data [1, i]);
+				Console.Write (H [1, i]);
 			}
 			Console.WriteLine ("  - " + H.ObtenerPuntuación (1) + " || Nombre: " + H.Ind [1].Genética.StringEfectivo ());
 		}

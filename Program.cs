@@ -28,6 +28,7 @@ namespace ApreTa
 			//Ev.Run ();
 
 			Torneo T = new Torneo ();
+			T.IteracionesPorEncuentro = 10;
 			T.InicializaTorneo ();
 			T.Run ();
 

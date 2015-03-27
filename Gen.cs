@@ -68,8 +68,8 @@ namespace ApreTa
 		{
 			Individuo I = new Individuo ();
 			I.Genética = (GrupoGen)this;
-			foreach (var H in Historial.ObtenerPosiblesHistorias(n, maxn)) {
-				if (H.Data [1, H.Actual] == 0 && I.Ejecutar (H) == 1) // Si confías después de una traición
+			foreach (var H in Historial.ObtenerPosiblesHistorias(n)) {
+				if (H [1, H.Actual] == 0 && I.Ejecutar (H) == 1) // Si confías después de una traición
 					return false;
 			}
 			return true;
@@ -137,18 +137,27 @@ namespace ApreTa
 		}
 
 		/// <summary>
+		/// Agrega un gen.
+		/// </summary>
+		/// <param name="G">Gen a agregar</param>
+		public void AddGen (Gen G)
+		{
+			_Genes.Add (G);
+		}
+
+		/// <summary>
 		/// Replica este grupo genético.
 		/// </summary>
 		public override Gen Replicar (float Coef = 1)
 		{
 			GrupoGen ret = new GrupoGen ();
 			foreach (var x in _Genes) {
-				if (r.NextDouble () >= 0.1 * Coef) // La probabilidad de eliminación base es 0.1
-					ret._Genes.Add (x.Replicar (Coef * 0.7f)); // Probabilidad recursiva/iterada es de 0.7
+				if (r.NextDouble () >= 0.01 * Coef) // La probabilidad de eliminación base es 0.1
+					ret._Genes.Add (x.Replicar (Coef * 0.3f)); // Probabilidad recursiva/iterada es de 0.7
 			}
 
 			// AgregarInstrucción
-			while (r.NextDouble() < Coef * 0.1) {
+			while (r.NextDouble() < Coef * 0.01) {
 				int indAgrega = r.Next (ret._Genes.Count + 1); //Índice para agregar
 				ret._Genes.Insert (indAgrega, InstrucciónGen.Aleatorio (r));
 			}
@@ -157,7 +166,7 @@ namespace ApreTa
 			ret.ReplicaSexual = r.NextDouble () < 0.001 * Coef ? !ReplicaSexual : ReplicaSexual;
 
 			// Dividir gen
-			if (r.NextDouble () < 0.01 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
+			if (r.NextDouble () < 0.001 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
 				int indCorte = r.Next (ret._Genes.Count + 1);
 				GrupoGen G0 = new GrupoGen ();
 				GrupoGen G1 = new GrupoGen ();
@@ -171,7 +180,7 @@ namespace ApreTa
 				ret._Genes.Add (G0);
 				ret._Genes.Add (G1);
 			}
-			// Color (no entra
+			// Color (no entra)
 			if (r.NextDouble () < 0.05)
 				clr = (ConsoleColor)r.Next (16);
 
@@ -372,8 +381,12 @@ namespace ApreTa
 					
 				break;
 			case "?":
-				if (StackSize >= 3)
-					Mem.Push (Mem.Pop () != 0 ? Mem.Pop () : Mem.Pop ());
+				if (StackSize >= 3) {
+					int a0 = Mem.Pop ();
+					int a1 = Mem.Pop ();
+					int a2 = Mem.Pop ();
+					Mem.Push (a0 != 0 ? a1 : a2);
+				}
 				break;
 			case "<":
 				if (StackSize >= 2)
@@ -384,8 +397,8 @@ namespace ApreTa
 					Mem.Push (Mem.Pop () == Mem.Pop () ? 1 : 0);
 				break;
 			case "h":
-				if (StackSize >= 1 && Mem.Peek () < H.Actual && Mem.Peek () >= 0)
-					Mem.Push (H.Data [1, H.Actual - Mem.Pop ()]);
+				if (StackSize >= 1 && Mem.Peek () <= H.Actual && Mem.Peek () > 0)
+					Mem.Push (H [1, H.Actual - Mem.Pop ()]);
 				break;
 			case "i":
 				Mem.Push (H.Actual);
