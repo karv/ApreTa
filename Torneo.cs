@@ -168,14 +168,16 @@ namespace ApreTa
 		public void ReplicarAdaptados ()
 		{
 			EstructuraIndividuo I1, I2;
+			EstructuraIndividuo Agrega;
 			while (Individuos.Count < MaxIndiv) {
 				I1 = Individuos [r.Next (Individuos.Count)];
 				if (I1.Indiv.Genética.ReplicaSexual) {
 					I2 = Individuos [r.Next (Individuos.Count)];
-					Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar (I2.Indiv)));
+					Agrega = new EstructuraIndividuo (I1.Indiv.Replicar (I2.Indiv));
 				} else {
-					Individuos.Add (new EstructuraIndividuo (I1.Indiv.Replicar ()));
+					Agrega = new EstructuraIndividuo (I1.Indiv.Replicar ());
 				}
+				Individuos.Add (Agrega);
 			}
 		}
 
@@ -205,7 +207,8 @@ namespace ApreTa
 			if (MostrarVengativo && Individuos [0].Indiv.Genética.EsVengativo (IteracionesPorEncuentro))
 				Console.Write ("  Vengativo");
 			Console.WriteLine ();
-			Console.Write ("% buenos: " + BuenoPct);
+			Console.WriteLine ("% buenos: " + BuenoPct);
+			Console.WriteLine ("% sexuales: " + Individuos.FindAll (x => x.Indiv.Genética.ReplicaSexual).Count / Individuos.Count);
 			Console.WriteLine ();
 			// Escribir el pool
 			foreach (var x in Individuos) {
