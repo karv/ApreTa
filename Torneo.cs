@@ -160,6 +160,9 @@ namespace ApreTa
 
 						Torneo.Encuentro (new IndividuoHumano (), I);
 					}
+					if (kp.KeyChar == 'f') { // Sigue a in individuo al azar
+						Individuos [r.Next (Individuos.Count)].Siguiendo = true;
+					}
 				}
 			}
 		}
