@@ -152,8 +152,8 @@ namespace ApreTa
 		{
 			GrupoGen ret = new GrupoGen ();
 			foreach (var x in _Genes) {
-				if (r.NextDouble () >= 0.01 * Coef) // La probabilidad de eliminación base es 0.1
-					ret._Genes.Add (x.Replicar (Coef * 0.3f)); // Probabilidad recursiva/iterada es de 0.7
+				if (r.NextDouble () >= 0.01 * Coef) // La probabilidad de eliminación base es 0.01
+					ret._Genes.Add (x.Replicar (Coef * 0.3f)); // Probabilidad recursiva/iterada es de 0.3
 			}
 
 			// AgregarInstrucción
@@ -166,7 +166,7 @@ namespace ApreTa
 			ret.ReplicaSexual = r.NextDouble () < 0.001 * Coef ? !ReplicaSexual : ReplicaSexual;
 
 			// Dividir gen
-			if (r.NextDouble () < 0.001 * Coef) { // La probabilidad de dividir gen base es 0.01// Esta mutación no tiene fenotipo directo.
+			if (r.NextDouble () < 0.001 * Coef) { // La probabilidad de dividir gen base es 0.001// Esta mutación no tiene fenotipo directo.
 				int indCorte = r.Next (ret._Genes.Count + 1);
 				GrupoGen G0 = new GrupoGen ();
 				GrupoGen G1 = new GrupoGen ();
