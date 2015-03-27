@@ -171,7 +171,7 @@ namespace ApreTa
 				GrupoGen G0 = new GrupoGen ();
 				GrupoGen G1 = new GrupoGen ();
 				for (int i = 0; i < ret._Genes.Count; i++) {
-					if (i <= indCorte)
+					if (i < indCorte)
 						G0._Genes.Add (ret._Genes [i]);
 					else
 						G1._Genes.Add (ret._Genes [i]);
