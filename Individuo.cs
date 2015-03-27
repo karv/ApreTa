@@ -86,6 +86,14 @@ namespace ApreTa
 	/// </summary>
 	public class MemStack:System.Collections.Generic.Stack<int>
 	{
+		public override string ToString ()
+		{
+			string ret = "[" + Peek ().ToString () + "]";
+			foreach (var x in this) {
+				ret += x.ToString ();
+			}
+			return ret;
+		}
 	}
 
 	/// <summary>
