@@ -241,7 +241,7 @@ namespace ApreTa
 				Console.Write ("  Vengativo");
 			Console.WriteLine ();
 			Console.WriteLine ("% buenos: " + BuenoPct);
-			Console.WriteLine ("% sexuales: " + Individuos.FindAll (x => x.Indiv.Genética.ReplicaSexual).Count / Individuos.Count);
+			Console.WriteLine ("% sexuales: " + (float)Individuos.FindAll (x => x.Indiv.Genética.ReplicaSexual).Count / Individuos.Count);
 			Console.WriteLine ();
 			// Escribir el pool
 			foreach (var x in Individuos) {
