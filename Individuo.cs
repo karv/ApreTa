@@ -148,7 +148,7 @@ namespace ApreTa
 
 		public override string ToString ()
 		{
-			return string.Format ("[IndividuoHumano]");
+			return string.Format ("Humano");
 		}
 	}
 }
