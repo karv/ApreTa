@@ -229,7 +229,7 @@ namespace ApreTa
 			}
 
 			// Note que llegar aquí no implica que ambos sean sexualmente replicables, al menos uno lo es. 
-			ret.ReplicaSexual = r.Next (2) == 0 ? G1.ReplicaSexual : G2.ReplicaSexual; 
+			ret.ReplicaSexual = true;
 
 			return ret;
 
