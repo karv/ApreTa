@@ -147,7 +147,7 @@ namespace ApreTa
 				while (Console.KeyAvailable) {
 					ConsoleKeyInfo kp = Console.ReadKey (true);
 					if (kp.KeyChar == ' ') {// Humano vs individuo al azar
-						Torneo.Encuentro (new IndividuoHumano (), Individuos [r.Next (Individuos.Count)].Indiv);
+						Torneo.Encuentro (new IndividuoHumano (), Individuos [r.Next (Individuos.Count)].Indiv, IteracionesPorEncuentro);
 					}
 					if (kp.KeyChar == '<') {// Agrega un individuo en observacion
 						Individuo I = new Individuo (Console.ReadLine ());
@@ -158,7 +158,7 @@ namespace ApreTa
 					if (kp.KeyChar == 'z') {// Peleas contra 1h
 						Individuo I = new Individuo ("1h0i0=?");
 
-						Torneo.Encuentro (new IndividuoHumano (), I);
+						Torneo.Encuentro (new IndividuoHumano (), I, IteracionesPorEncuentro);
 					}
 					if (kp.KeyChar == 'f') { // Sigue a in individuo al azar
 						Individuos [r.Next (Individuos.Count)].Siguiendo = true;
@@ -170,7 +170,7 @@ namespace ApreTa
 		public void DespuntuarLargos ()
 		{
 			foreach (var x in Individuos) {
-				x.Punt -= x.ToString ().Length / 10;
+				// x.Punt -= x.ToString ().Length / 10;
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace ApreTa
 			return (float)ctr / Individuos.Count;
 		}
 
-		public static int Encuentro (Individuo I, Individuo J)
+		public static int Encuentro (Individuo I, Individuo J, int Long)
 		{
 			Torneo Trn = new Torneo ();
 			EstructuraIndividuo[] EI = new EstructuraIndividuo[2];
@@ -290,6 +290,7 @@ namespace ApreTa
 			EI [1] = new EstructuraIndividuo (J);
 			Trn.Individuos.Add (new EstructuraIndividuo (I));
 			Trn.Individuos.Add (new EstructuraIndividuo (J));
+			Trn.IteracionesPorEncuentro = Long;
 			Trn.NumRondas = 1;
 			Trn.MaxIndiv = 2;
 			Trn.MinIndiv = 2;
