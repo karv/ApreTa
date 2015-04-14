@@ -5,7 +5,70 @@ using System.Collections.Generic;
 namespace ApreTa
 {
 	/// <summary>
-	/// Representa un torneo entre individuos.
+	/// Un torneo con topología.
+	/// </summary>
+	public class TorneoDinámico : Graficas.Grafica<Torneo>
+	{
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApreTa.TorneoDinámico"/> class.
+		/// </summary>
+		public TorneoDinámico (Torneo[] T) : base  (T)
+		{
+
+		}
+
+		/// <summary>
+		/// Inicializa un nuevo Torneo con las reglas de este TorneoDinámico.
+		/// </summary>
+		/// <returns>The torneo.</returns>
+		public Torneo CrearTorneo ()
+		{
+			Torneo T = new Torneo ();
+			T.IteracionesPorEncuentro = IteracionesPorEncuentro;
+			T.MaxIndiv = MaxIndividuo;
+			T.MinIndiv = MinIndividuo;
+			T.NumRondas = NumRondas;
+			return T;
+		}
+
+		public void RunOnce ()
+		{
+			// Crear una copia de Nodos e iterar.
+			foreach (var x in Nodos.ToArray()) {
+				x.RunOnce ();
+				x.MatarMenosAdaptados ();
+				x.MuestraStats ();
+				x.ReplicarAdaptados ();
+				x.ResetScore ();
+			}
+		}
+
+		public void Run ()
+		{
+			while (true) {
+				RunOnce ();
+			}
+		}
+
+		/// <summary>
+		/// Prepara las variables.
+		/// </summary>
+		public void Inicializar ()
+		{
+
+		}
+		// Variables default para los torneos locales
+		public int MinIndividuo = 100;
+		public int MaxIndividuo = 150;
+		public int NumRondas = 100;
+		public int IteracionesPorEncuentro = 100;
+		// Constantes del TorneoDinámico
+		public const int NumTorneos = 10;
+	}
+
+	/// <summary>
+	/// Representa un torneo (local) entre individuos.
 	/// </summary>
 	public class Torneo
 	{

@@ -27,11 +27,20 @@ namespace ApreTa
 
 			//Ev.Run ();
 
-			Torneo T = new Torneo ();
+			Torneo[] tors = new Torneo[TorneoDinámico.NumTorneos];
+			for (int i = 0; i < TorneoDinámico.NumTorneos; i++) {
+				tors [i] = new Torneo ();
+			}
+
+			TorneoDinámico T = new TorneoDinámico (tors);
+			T.Run ();
+			/*
+
 			T.IteracionesPorEncuentro = 100;
 			T.NumRondas = 1000;
 			T.InicializaTorneo ();
 			T.Run ();
+			*/
 
 		}
 	}
