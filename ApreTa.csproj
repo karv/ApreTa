@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -42,8 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="listaextras\ListaExtras.csproj">
-      <Project>{b9f315ae-47f8-4629-83fc-3b4d70087083}</Project>
+      <Project>{B9F315AE-47F8-4629-83FC-3B4D70087083}</Project>
       <Name>ListaExtras</Name>
+    </ProjectReference>
+    <ProjectReference Include="Grafo\Grafos.csproj">
+      <Project>{AF2E2C37-9F1D-4D32-AE62-8484B0A9DD50}</Project>
+      <Name>Grafos</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

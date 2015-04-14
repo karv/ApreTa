@@ -1,3 +1,6 @@
 [submodule "listaextras"]
 	path = listaextras
 	url = git@gitlab.com:karvayoedgar/listaextras.git
+[submodule "Grafo"]
+	path = Grafo
+	url = git@gitlab.com:karv/Grafo.git
